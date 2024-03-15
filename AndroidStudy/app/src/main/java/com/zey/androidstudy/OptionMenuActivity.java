@@ -1,9 +1,13 @@
 package com.zey.androidstudy;
 
 import android.os.Bundle;
+import android.util.Log;
+import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -19,6 +23,7 @@ public class OptionMenuActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_option_menu);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -26,11 +31,17 @@ public class OptionMenuActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        
+        this.actionBarSetting();
+    }
 
+    private void actionBarSetting(){
+        // 设置显示返回按钮
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle("选项菜单");
         actionBar.setDisplayHomeAsUpEnabled(true);
 
+        // 在action bar 中显示一个logo
         actionBar.setDisplayShowHomeEnabled(true);
         actionBar.setLogo(R.drawable.baseline_home_24);
         actionBar.setDisplayUseLogoEnabled(true);

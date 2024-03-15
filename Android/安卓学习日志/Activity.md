@@ -17,12 +17,8 @@
 - onDestroy 页面销毁
 
 
-```java
-    
-```
-```java
-    
-```
-```java
-    
-```
+## Activity 页面任务栈
+
+## 通过adb查看页面任务栈
+
+> adb shell dumpsys activity | findstr + 包名

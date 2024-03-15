@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Login">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:src="@drawable/bg"></ImageView>
+
+    <LinearLayout
+        style="@style/login_content"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:paddingLeft="30dp"
+        android:paddingTop="20dp"
+        android:paddingRight="30dp"
+        android:paddingBottom="20dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_bottom_line"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="区&#12288;号"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/font_size_normal" />
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="60dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_edit_text"
+                android:focusable="false"
+                android:hint="+86"
+                android:textSize="@dimen/font_size_normal" />
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="20dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_login_more" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_bottom_line"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="手&#12288;机"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/font_size_normal" />
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="60dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_edit_text"
+                android:hint="输入手机号"
+                android:inputType="number"
+                android:textSize="@dimen/font_size_normal" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_bottom_line"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="验证码"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/font_size_normal" />
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="60dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_edit_text"
+                android:focusable="false"
+                android:hint="输入验证码"
+                android:inputType="number"
+                android:textSize="@dimen/font_size_normal" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:layout_width="wrap_content"
+                android:layout_height="25dp"
+                android:text="获取验证码"
+                android:textSize="@dimen/font_size_small"
+                android:textColor="@color/white"
+                android:background="@drawable/selector_button"/>
+        </LinearLayout>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/selector_button"
+            android:text="登陆"
+            android:textColor="@color/white"
+            android:textSize="@dimen/font_size_normal"
+            android:textStyle="bold"
+            />
+    </LinearLayout>
+
+</FrameLayout>

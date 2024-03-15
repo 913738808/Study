@@ -13,11 +13,27 @@
         android:theme="@style/Theme.AndroidStudy"
         tools:targetApi="31">
         <activity
-            android:label="选项菜单"
-            android:parentActivityName=".MainActivity"
-            android:name=".OptionMenuActivity"
+            android:label="列表"
+            android:name=".viewlist.ListMainActivity"
             android:exported="false" />
-            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"></meta-data>
+        <activity
+            android:name=".viewlist.ArrayListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ConetxtMenuActivity"
+            android:exported="false"
+            android:label="上下文菜单"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".OptionMenuActivity"
+            android:exported="false"
+            android:label="选项菜单"
+            android:parentActivityName=".MainActivity" />
+
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value=".MainActivity" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true">

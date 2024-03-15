@@ -11,6 +11,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.zey.androidstudy.viewlist.ListMainActivity;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -24,13 +26,33 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        final Button button = findViewById(R.id.toOptionMenu);
-        button.setOnClickListener(new View.OnClickListener() {
+        final Button btn_toOptionMenu = findViewById(R.id.toOptionMenu);
+        btn_toOptionMenu.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Code here executes on main thread after user presses button
                 Intent intent = new Intent(MainActivity.this, OptionMenuActivity.class);
                 startActivity(intent);
             }
         });
+
+        final Button btn_toContextMenu = findViewById(R.id.toConetxtMenu);
+        btn_toContextMenu.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // Code here executes on main thread after user presses button
+                Intent intent = new Intent(MainActivity.this, ConetxtMenuActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        final Button btn_toListMain = findViewById(R.id.toListMain);
+        btn_toListMain.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // Code here executes on main thread after user presses button
+                Intent intent = new Intent(MainActivity.this, ListMainActivity.class);
+                startActivity(intent);
+            }
+        });
+
+
     }
 }
