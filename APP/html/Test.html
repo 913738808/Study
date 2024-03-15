@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- <link rel="stylesheet" href="../css/api.css"> -->
+    <script src="../script/api.js"></script>
+    <style>
+        html,body{
+            margin: 0;
+            padding: 0;
+            color: rgb(94, 94, 94);
+        }
+        .header{
+            background-color: #E04D57;
+            width: 100%;
+            height: 80px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        p{
+            width: 90%;
+            margin: 5px auto;
+            word-wrap:break-word;
+            word-break:normal; 
+        }
+        .message{
+            width: 90%;
+            min-height: 50px;
+            border: 1px solid #ccc;
+            margin: 0 auto;
+        }
+        .btn{
+            background-color: #E04D57;
+            width: fit-content;
+            height: fit-content;
+            padding: 10px 20px ;
+            color: #fff;
+            margin: 10px auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">Test</div>
+    <input type="text" id="ssid" placeholder="ssid">
+    <br>
+    <input type="text" id="pass" placeholder="password">
+    <!-- <p>wifi-ssid:U+Net783</p>
+    <p>wifi-password:4000002550</p> -->
+
+    <div class="message"></div>
+    <div class="btn" onclick="setNetwork()">set network</div>
+    <div class="btn" onclick="bind()">bind</div>
+    <div class="btn" onclick="setSubscribe()">setSubscribe</div>
+    <div class="btn" onclick="clearn()">clear</div>
+    <br>
+    <div class="btn" onclick="registerNotifications()">registerNotifications</div>
+</body>
+</html>
+<script>
+    var gizWifiSDK = null
+    var gizWifiDevice = null
+    var wifi_info = {}
+    var dev = {}
+    var wifi_ssid = ""
+    var wifi_password = ""
+    // var wifi_password = "plus18520"
+
+    apiready = function(){
+        gizWifiSDK = api.require('gizWifiSDK');
+        gizWifiDevice = api.require('gizWifiDevice');
+
+        wifi_info = initGizWifiSDK()
+        setMessage("on init")
+        showWait()
+        alert(JSON.stringify(wifi_info))
+        gizWifiSDK.startWithAppInfo({"appInfo":{"appId":wifi_info.appid, "appSecret":wifi_info.appSerect}}, function(ret, err) {
+            // alert("ret = " + JSON.stringify(ret) + "err = " + JSON.stringify(err))
+            api.hideProgress();
+            getPhoneSSID()
+            setMessage("ret = " + JSON.stringify(ret))
+            setMessage("err = " + JSON.stringify(err))
+        });
+
+        let test_SSID = $api.getStorage('test_ssid');
+        if(test_SSID){ 
+            wifi_ssid = test_SSID;
+            document.getElementById('ssid').value = wifi_ssid
+        }
+        let test_PASS = $api.getStorage('test_pass');
+        if(test_PASS){ wifi_password = test_PASS;document.getElementById('pass').value = wifi_password }
+    }
+    
+    function getPhoneSSID(fn){
+        gizWifiSDK.getPhoneSSID(function(ret, err) {
+            wifi_ssid = ret.SSID
+            if(fn){
+                fn()
+            }
+        });
+    }
+
+    function setNetwork(){
+        wifi_ssid = document.getElementById('ssid').value
+        wifi_password = document.getElementById('pass').value
+        $api.setStorage('test_ssid', wifi_ssid);
+        $api.setStorage('test_pass', wifi_password);
+        showWait()
+        setMessage("start set wifi")
+        getPhoneSSID(function(){
+            setMessage("ssid"+wifi_ssid)
+            gizWifiSDK.setDeviceOnboardingDeploy({
+                "ssid": wifi_ssid,
+                "key": wifi_password,
+                "mode": 1/*GizWifiSoftAP*/,
+                "softAPSSIDPrefix": "XPG-GAgent",
+                "timeout": 60,
+                "gagentTypes":[4],
+                "bind":false
+            }, function (ret, err) {     
+                api.hideProgress();
+                setMessage("ret = " + JSON.stringify(ret))
+                setMessage("err = " + JSON.stringify(err))
+                if(ret){
+                    setMessage("Device_mac:" + ret.device.mac)
+                    setMessage("Device_did:" + ret.device.did)
+                    dev.mac = ret.device.mac
+                    dev.did = ret.device.did
+                }
+            })
+        })
+        
+    }
+
+    function bind(){
+        var uid = $api.getStorage('uid');
+        var token = $api.getStorage('token');
+        alert()
+        showWait()
+        setMessage("start binding")
+        gizWifiSDK.bindRemoteDevice({
+            "uid": uid,
+            "token": token,
+            "mac": dev.mac,
+            "productKey": wifi_info.produce,
+            "productSecret": wifi_info.serect
+        }, function (ret, err) {
+            api.hideProgress();
+            setMessage("ret = " + JSON.stringify(ret))
+            setMessage("err = " + JSON.stringify(err))
+        });
+    }
+
+    function registerNotifications(){
+        setMessage("start Notify")
+        gizWifiDevice.registerNotifications({
+            "device": {
+                "mac": dev.mac,
+                "did": dev.did
+                }
+        }, function(ret, err) {
+            setMessage("ret = " + JSON.stringify(ret))
+        });
+    }
+
+    function setSubscribe(){
+        showWait()
+        setMessage("start setSubscribe")
+        gizWifiDevice.setSubscribe({
+            "subscribed": true,
+            "device": {
+                "mac": dev.mac,
+                "did": dev.did
+            }
+        }, function(ret, err) {
+            api.hideProgress();
+            setMessage("ret = " + JSON.stringify(ret))
+            setMessage("err = " + JSON.stringify(err))
+        });
+    }
+
+    var messageBox = null
+    function setMessage(msg){
+        if(!messageBox){ messageBox = document.getElementsByClassName('message')[0] }
+        messageBox.innerHTML += ('<br><p>' + msg + '</p>')
+    }
+    function showWait(){
+        api.showProgress({
+            title: 'wait',
+            text: '',
+            modal:  true
+        });
+    }
+
+    function clearn(){
+        if(!messageBox){ messageBox = document.getElementsByClassName('message')[0] }
+        messageBox.innerHTML = ""
+    }
+
+    function initGizWifiSDK(){
+        var appid,appSerect
+        if (api.systemType == 'ios') {
+            appid = '10401189b8854079a2eba6cf994c58a2';
+            appSerect = 'bbbbc2ad464b425aa638cdc498a22ee7'
+        } else {
+            appid = '1b7299db43b045288b43e4d39e4c97a4',
+            appSerect = 'ce3a8c535f2c4737b0e39cc85a347bc8'
+        }
+        var wifi = {
+            'appid': appid,
+            'appSerect': appSerect,
+            'produce': '7f65d22016714defb440e89fc3576042',
+            'serect': 'a1cef20961f149a8bcd8dfa4a021f7f6'
+        }
+        return wifi
+    }
+</script>

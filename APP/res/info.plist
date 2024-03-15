@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+	<dict>
+		<key>NSBluetoothAlwaysUsageDescription</key>
+		<string>APP需要您的同意，才能在使用时使用蓝牙，以便于搜索附近泡奶机，并为泡奶机进行配网，远程操控泡奶机</string>
+		<key>NSLocalNetworkUsageDescription</key>
+ 		<string>APP需要您的同意，才能在使用时获取位置信息，以便于搜索附近的泡奶机位置</string>
+		<key>Application supports iTunes file sharing</key>
+		<true/>
+		<key>UIFileSharingEnabled</key>
+ 		<true/>
+	</dict>
+</plist>

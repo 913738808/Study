@@ -1,0 +1,325 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>index</title>
+    <link rel="stylesheet" type="text/css" href="./css/api.css" />
+    <style type="text/css">
+        html,
+        body {
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body>
+</body>
+<script type="text/javascript" src="./script/api.js"></script>
+<script src="./script/public.js"></script>
+<script type="text/javascript">
+    apiready = function() {
+        // $api.clearStorage();
+        // $api.setStorage('language','ko')
+        // 设置默认语言
+        if(!$api.getStorage('language')){
+            $api.setStorage('language','cn')
+        }
+        // 设置状态栏颜色
+        api.setStatusBarStyle({
+            style: 'light',
+            color:'rgba(0,0,0,0)'
+        });
+
+         // 初始化机智云的参数
+         initGizWifiSDK()
+        // 获取权限
+        if(api.systemType=='ios'){
+            api.requestPermission({
+                list:['location','photos','camera','locationAlways','storage'],
+                code:1
+            }, function(ret, err){
+                console.log(JSON.stringify(ret))
+            });
+        }else{
+            api.requestPermission({
+                list:['location','photos','camera','ble-scan','ble-ad','ble-connect','storage'],
+                code:1
+            }, function(ret, err){});
+        }
+        var ble = api.require('ble');
+        // ble.requestBlePermission();
+        // 判断是否登录
+        var phoneNum = $api.getStorage('phoneNum')
+        if(phoneNum == undefined){
+            openWin('login','./html/login.html') 
+        }else{
+            openWin('choiceDevice','./html/choiceDevice.html')
+        }
+        // openWin('babyInfo','./html/babyInfo.html')
+        // 测试使用 快速清除Storage
+        // $api.clearStorage();
+       
+    };
+
+    function initGizWifiSDK(){
+        var appid,appSerect
+        if (api.systemType == 'ios') {
+            appid = '10401189b8854079a2eba6cf994c58a2';
+            appSerect = 'bbbbc2ad464b425aa638cdc498a22ee7'
+        } else {
+            appid = '1b7299db43b045288b43e4d39e4c97a4',
+            appSerect = 'ce3a8c535f2c4737b0e39cc85a347bc8'
+
+            // appid = 'da6823b815294e18b3501384bf538327',
+            // appSerect = '5658187cbaa04f8e89fde2bd3a79c678'
+        }
+        var wifi = {
+            'appid': appid,
+            'appSerect': appSerect,
+            'produce': '7f65d22016714defb440e89fc3576042',
+            'serect': 'a1cef20961f149a8bcd8dfa4a021f7f6'
+        }
+        // if (api.systemType == 'ios') {
+        //     appid = '6bec459526b34808855e4ec338571eb0';
+        //     appSerect = '468a856a497147b3b2ca8cc0dd31ab16'
+        // } else {
+        //     appid = '0bc41f32dcb34071af72184e8f63cf5d',
+        //     appSerect = '8c91bf9d48ed4edc9870f4e686a44ed0'
+        // }
+        // var wifi = {
+        //     'appid': appid,
+        //     'appSerect': appSerect,
+        //     'produce': '43ab641979864463b13b600a44d2b77f',
+        //     'serect': 'b27574c57a06479f9294177a98503b5b'
+        // }
+        $api.setStorage('gizWifiSDK', wifi)
+    }
+    /**
+     * Storage中的参数
+     * gizWifiSDK 机智云使用时的必要参数
+     * uid 登录后获得的uid
+     * token 登录后获得的token
+     * phoneNum 登录后获得的phoneNum
+     * device {mac:'',did:''}
+     * goodsId 商品id
+     * BrewData 作为图表显示的依据
+     * language 控制的语言变量
+    */
+</script>
+</html>
+
+
+<!-- <!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width"/>
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>WinC</title>
+    <link rel="stylesheet" type="text/css" href="css/api.css" />
+    <link rel="stylesheet" type="text/css" href="css/box.css" />
+    <script type="text/javascript" src="script/public.js"></script>
+    <style>
+    	p{
+    		color:#999;
+    		padding:5px;
+    	}
+        body{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100vw;
+            height: 100vh;
+            overflow: scroll;
+        }
+        .btn{
+            width: 50vw;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #999;
+            border-radius: 10px;
+        }
+    </style>
+	<script type="text/javascript">
+        let gizwifisdk = null
+	    apiready = function(){
+			// fixStatusBar();//沉浸式效果，支持IOS7及Android4.4及以上
+            gizwifisdk = api.require('GizWifiSDK_Feisi')
+            gizwifisdk.test()
+            api.requestPermission({
+                list:['location','ble-scan','ble-ad','ble-connect','storage'],
+                code:1
+            }, function(ret, err){});
+            
+	    };
+
+        function requestSendVerifyCode(){
+            gizwifisdk.requestSendVerifyCode({
+                appSecret:"ce3a8c535f2c4737b0e39cc85a347bc8",
+                phone:"+8618258423177"
+            })
+        }
+
+        function startWithAppInfo(){
+            gizwifisdk.startWithAppInfo({
+                "appInfo":{
+                    "appId":"1b7299db43b045288b43e4d39e4c97a4",
+                    "appSecret":"ce3a8c535f2c4737b0e39cc85a347bc8"
+                },
+                "productInfo":[
+                    {"productKey":"7f65d22016714defb440e89fc3576042", "productSecret":"a1cef20961f149a8bcd8dfa4a021f7f6","usingAdapter":"GizAdapterWifiBle"}
+                ]
+            },res=>{
+                setLogLevel()
+                console.log("设备初始化"+JSON.stringify(res))
+            })
+        }
+
+        function userLogin(){
+            gizwifisdk.userLogin({
+                "userName":"18258423177",
+                "password":"123456"
+            },res=>{
+                console.log("登陆"+JSON.stringify(res))
+            })
+        }
+
+        function getBoundDevices(){
+            gizwifisdk.getBoundDevices({
+                "uid":"24adf8de07ba45e6859870b4cbc84e6b",
+                "token":"39ce9f126bb448ac94786bb554b8dc2e"
+            },res=>{
+                console.log("绑定列表"+JSON.stringify(res))
+            })
+        }
+
+        function bindRemoteDevice(){
+            gizwifisdk.bindRemoteDevice({
+                "uid":"24adf8de07ba45e6859870b4cbc84e6b",
+                "token":"39ce9f126bb448ac94786bb554b8dc2e",
+                "mac":"B8D61A726BF0",
+                "productKey":"7f65d22016714defb440e89fc3576042", "productSecret":"a1cef20961f149a8bcd8dfa4a021f7f6"
+            },res=>{
+                console.log(JSON.stringify(res))
+            })
+        }
+
+        function setSubscribe(){
+            gizwifisdk.setSubscribe({
+                device:{"mac":"B8D61A726BF0","did":"WheZin6NaFWY6XiCkYF4jf"},
+                productSecret:"a1cef20961f149a8bcd8dfa4a021f7f6",
+                "subscribed": true
+            },(res,err)=>{
+                console.log("订阅"+JSON.stringify(res))
+            })
+        }
+
+        function registerNotifications(){
+            gizwifisdk.registerNotifications({
+                device:{
+                    mac:"B8D61A726BF0",
+                    did:"WheZin6NaFWY6XiCkYF4jf"
+                }
+            },(res,err)=>{
+                console.log("监听:"+JSON.stringify(res))
+            })
+        }
+
+        function getPhoneSSID(){
+            gizwifisdk.getPhoneSSID(res=>{
+                console.log(JSON.stringify(res))
+            })
+        }
+
+        function setDeviceOnboardingDeploy(){
+            gizwifisdk.setDeviceOnboardingDeploy({
+                ssid:"DLINK_9F36F0",
+                key:"123456wificode",
+                timeout:60,
+                bind:true,
+                softAPSSIDPrefix:"XPG-GAgent-6bf0",
+                "types": [4],
+                mode:3
+            },(res,err)=>{
+                console.log(JSON.stringify(res))
+                console.log(JSON.stringify(err))
+            })
+        }
+
+        function setLogLevel(){
+            gizwifisdk.setLogLevel()
+        }
+
+        function registerUser(){
+            gizwifisdk.registerUser({
+                userName:"18258423177",
+                password:"123456",
+                verifyCode:"835505",
+                accountType:1
+            },(res,err)=>{
+                console.log(JSON.stringify(res))
+            })
+        }
+
+        function writes(){
+            gizwifisdk.write({
+                device:{
+                    mac:"B8D61A726BF0",
+                    did:"WheZin6NaFWY6XiCkYF4jf"
+                },
+                sn:0,
+                data:{
+                    "yield":60
+                }
+            },(res,err)=>{
+                console.log("写入数据:"+JSON.stringify(res))
+            })
+        }
+
+        function getDeviceStatus(){
+            gizwifisdk.getDeviceStatus({
+                device:{
+                    mac:"B8D61A726BF0",
+                    did:"WheZin6NaFWY6XiCkYF4jf"
+                }
+            },(res,err)=>{
+                console.log("查询状态:"+JSON.stringify(res))
+            })
+        }
+	</script>
+</head>
+<body>
+    <br><br><br><br>
+    <div class="btn" onclick="startWithAppInfo()">初始化</div>
+    <br>
+    <div class="btn" onclick="requestSendVerifyCode()">发送验证码</div>
+    <br>
+    <div class="btn" onclick="userLogin()">登陆</div>
+    <br>
+    <div class="btn" onclick="registerUser()">registerUser</div>
+    <br>
+    <div class="btn" onclick="getPhoneSSID()">获取Wifi-SSID</div>
+    <br>
+    <div class="btn" onclick="setDeviceOnboardingDeploy()">配网</div>
+    <br>
+    <div class="btn" onclick="getBoundDevices()">获取绑定设备列表</div>
+    <br>
+    <div class="btn" onclick="bindRemoteDevice()">绑定设备</div>
+    <br>
+    <div class="btn" onclick="setLogLevel()">关闭日志</div>
+    <br>
+    <div class="btn" onclick="setSubscribe()">订阅</div>
+    <br>
+    <div class="btn" onclick="registerNotifications()">registerNotifications</div>
+    <br>
+    <div class="btn" onclick="writes()">write</div>
+    <br>
+    <div class="btn" onclick="getDeviceStatus()">getDeviceStatus</div>
+    <br>
+</body>
+</html> -->

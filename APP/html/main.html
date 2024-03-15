@@ -1,0 +1,1110 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+        content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>main</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <style>
+        html,
+        body {
+            height: 100%;
+            background-color: rgba(255, 255, 255, 1);
+        }
+
+        /* 旁门正道字体 */
+        @font-face {
+            font-family: 'pmzd';
+            src: url('../css/PangMenZhengDaoBiaoTiTi-1.ttf');
+        }
+
+        #control {
+            width: 100vw;
+            height: 38vh;
+            margin-top: 12%;
+            position: relative;
+        }
+
+        #calibrations {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        #calibrations>div {
+            background-color: #EFEEFA;
+            width: 6px;
+            height: 18px;
+            border-radius: 3px;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform-origin: 50% 20vh;
+        }
+
+        .line {
+            width: 34vh;
+            height: 34vh;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, calc(-50% + 16px));
+        }
+
+        .info {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            text-align: center;
+            transform: translate(-50%, -50%);
+        }
+        .arrow{
+            position: absolute;
+            left: 50%;
+            bottom: 10%;
+            transform: translate(-50%,0);
+            width: 40%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .arrow>.arrow_line{
+            height: 1vh;
+            width: 34vw;
+            background-color: #E04D57;
+        }
+        .arrow_left{
+            border-top: 3vw solid transparent;
+            border-bottom: 3vw solid transparent;
+            border-right: 3vw solid #E04D57; 
+        }
+        .arrow_right{
+            border-top: 3vw solid transparent;
+            border-bottom: 3vw solid transparent;
+            border-left: 3vw solid #E04D57; 
+        }
+
+        .mainText {
+            font-size: 76px;
+            color: #E04D57;
+            position: relative;
+            display: flex;
+            align-items: baseline;
+            font-family: 'pmzd'
+        }
+
+        .mainText>img {
+            width: 20px;
+            height: 24px;
+        }
+
+        .mainTextsmall {
+            text-align: center;
+            font-size: 12px;
+            color: #877DBC;
+            font-weight: 700;
+        }
+
+        .header {
+            position: relative;
+        }
+
+        .header>img {
+            width: 100vw;
+            height: 15vh;
+        }
+
+        .milkBrand {
+            width: 80%;
+            height: 65px;
+            background-color: #fff;
+            position: absolute;
+            left: 50%;
+            border-radius: 15px;
+            bottom: 0px;
+            transform: translate(-50%, 50%);
+            box-shadow: 0px 4px 8px rgba(249, 189, 166, 0.36);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .boult {
+            position: absolute;
+            right: 20px;
+        }
+
+        .milktext {
+            color: #fff;
+            font-size: 18px;
+            position: absolute;
+            left: 50%;
+            top: 10px;
+            transform: translate(-50%, 0);
+        }
+
+        .alarm>div {
+            display: flex;
+            width: 80vw;
+            margin: 0 auto;
+            justify-content: space-around;
+        }
+
+        .alarm>div>div {
+            width: 6vh;
+            text-align: center;
+            margin: calc(1.8vh + 5px) 0;
+            color: #60559E;
+            position: relative;
+        }
+
+        .alarm>div>div>p {
+            white-space: nowrap;
+            position: absolute;
+            font-size: 11px;
+            bottom: -11px;
+            left: 50%;
+            transform: translate(-50%, 0);
+        }
+
+        #mainButton {
+            color: #fff;
+            background-color: #E04D57;
+            width: 13vh;
+            height: 13vh;
+            margin: 0 auto;
+            font-size: 28px;
+            text-align: center;
+            line-height: 13vh;
+            border-radius: 50%;
+            box-shadow: 0px 3px 10px rgba(226, 87, 96, 0.41);
+            white-space:nowrap;
+        }
+        #mainButton:active{
+            transform: scale(0.95);
+        }
+        .menu {
+            position: absolute;
+            left: 10vw;
+            top: 0px;
+            text-align: center;
+        }
+
+        .menu>p {
+            color: rgb(255, 255, 255);
+            font-size: 0.7rem;
+        }
+
+        .menu>img {
+            height: 4vh;
+        }
+        .temControl {
+            position: absolute;
+            right: 10vw;
+            top: 0px;
+            text-align: center;
+        }
+
+        .temControl>p {
+            color: rgb(255, 255, 255);
+            font-size: 0.7rem;
+        }
+
+        .temControl>img {
+            height: 4vh;
+        }
+        .setMilk{
+            color: #60559E;
+            position: absolute;
+            right: 10px;
+            bottom: 80px;
+        }
+
+        .Button_hot{
+            width: 50px;
+            height: 50px;
+            color: #ffffff;
+            background-color: #E04D57;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+            right: 20px;
+            bottom: 80px;
+            box-shadow: 0px 3px 10px rgba(226, 87, 96, 0.41);
+            border-radius: 50%;
+            transition: 0.1s all ease-in-out;
+            font-size: 0.8rem;
+        }
+        .button_box{
+            height: 60%;
+            width: 60%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .Button_hot:active{
+            transform: scale(0.95);
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <div class="header">
+            <!-- 背景图片 -->
+            <img src="../image/main/header.png">
+            <div class="milktext">{{lang.卡伦特冲奶机}}</div>
+            <!-- 温度差控制 -->
+            <div class="temControl" onclick="showPopup()">
+                <img src="../image/main/change.png" alt="">
+                <p>{{lang.冲调温度}}</p>
+            </div>
+
+            <div class="menu" onclick="openSM()">
+                <img src="../image/baby/setting.png" alt="">
+                <p>{{lang.设置}}</p>
+            </div>
+
+            <!-- 奶粉品牌 -->
+            <div class="milkBrand" onclick="openFNS()">
+                <div>
+                    <p style="font-size: 13px;color: #F9747D;text-align: center;" id="milkName">{{lang.美赞臣经典版安儿宝A}}</p>
+                    <p style="font-size: 10px;color: #877DBC;text-align: center;" id="milkratio">{{lang.提示}}</p>
+                </div>
+                <div class="boult"><img src="../image/main/boult.png" width="15px;" alt="" srcset=""></div>
+            </div>
+        </div>
+        <div id="control">
+            <div id="calibrations"></div>
+            <div class="line">
+                <img src="../image/main/circle.png" width="100%" alt="" srcset="">
+            </div>
+            <div class="info">
+                <div class="mainText">{{yield}}
+                    <!-- <img src="../image/main/icon1.png" alt="" srcset=""> -->
+                </div>
+                <div class="mainTextsmall">{{lang.奶量}}/ml</div>
+                
+            </div>
+            <div class="arrow">
+                <div class="arrow_left"></div>
+                <div class="arrow_line"></div>
+                <div class="arrow_right"></div>
+            </div>
+            
+            <!-- <img src="../image/main/arrow.png" class="arrow"> -->
+        </div>
+        <div class="alarm">
+            <div>
+                <div>
+                    <img :src="alerts.Bottleplace?'../image/main/1-1.png':'../image/main/1.png'" width="100%" alt=""
+                        srcset="">
+                    <p>{{lang.奶瓶放置}}</p>
+
+                </div>
+                <div>
+                    <img :src="alerts.boxPlace?'../image/main/2-1.png':'../image/main/2.png'" width="100%" alt=""
+                        srcset="">
+                    <p>{{lang.奶盒放置}}</p>
+                </div>
+                <div>
+                    <img :src="alerts.watertank?'../image/main/3-1.png':'../image/main/3.png'" width="100%" alt=""
+                        srcset="">
+                    <p>{{lang.水箱放置}}</p>
+                </div>
+            </div>
+            <div>
+                <div>
+                    <img :src="alerts.tempCheck?'../image/main/4-1.png':'../image/main/4.png'" width="100%" alt=""
+                        srcset="">
+                    <p>{{lang.温度检测}}</p>
+                </div>
+                <div>
+                    <img :src="alerts.iswater?'../image/main/5-1.png':'../image/main/5.png'" width="100%" alt=""
+                        srcset="">
+                    <p>{{lang.是否有水}}</p>
+                </div>
+                <div>
+                    <img :src="alerts.mix?'../image/main/6-1.png':'../image/main/6.png'" width="100%" alt="" srcset="">
+                    <p>{{lang.混合仓}}</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="mainButton" tapmode onclick="Bubble()">
+            {{lang.冲奶}}
+            <!-- 冲奶中 -->
+        </div>
+
+        <div id="Button_hot" class="Button_hot" tapmode onclick="toHot()">
+            <div class="button_box" v-show="!isKo">
+                {{lang.温水}}
+            </div>
+            <div class="button_box" v-show="isKo">
+                <p>온수</p>
+                <p>추출</p>
+            </div>
+            
+            <!-- 温水 -->
+            <!-- 冲奶中 -->
+        </div>
+
+        <!-- <div class="setMilk" onclick="openMilkSelect()">{{lang.奶粉设置}}</div> -->
+    </div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script src="../script/vue.js"></script>
+<script src="../script/public.js"></script>
+<script src="../script/lang.js"></script>
+<script type="text/javascript">
+    var calibrationsArray = []
+    var gizWifiSDK = null
+    var isGizWifiSDKStart = false
+    var gizWifiDevice = null
+    var state = true //泡奶机状态 true则是没有报错
+    var FNScanner = null
+    var toastTime = null
+
+    var isShowToastAlarm = true
+
+    // 控制是否能冲奶的条件之一 确保调整奶量后1秒才能冲奶
+    var stateTem = true
+
+    var lang = {
+        卡伦特冲奶机: getTranslate('卡伦特冲奶机'),
+        美赞臣经典版安儿宝A: getTranslate('美赞臣经典版安儿宝A'),
+        提示: getTranslate('提示'),
+        奶量: getTranslate('奶量'),
+        奶瓶放置: getTranslate('奶瓶放置'),
+        奶盒放置: getTranslate('奶盒放置'),
+        是否有水: getTranslate('是否有水'),
+        温度检测: getTranslate('温度检测'),
+        水箱放置: getTranslate('水箱缺水'),
+        混合仓: getTranslate('混合仓'),
+        冲奶: getTranslate('冲奶'),
+        菜单:getTranslate('菜单'),
+        冲调温度:getTranslate('冲调温度'),
+        奶粉设置:getTranslate('奶粉设置'),
+        设置:getTranslate('设置'),
+        温水:getTranslate('温水')
+    }
+    apiready = function () {
+        drawCalibration()
+        var header = document.getElementsByClassName('milktext')[0];
+        $api.fixStatusBar(header)
+        var temControl = document.getElementsByClassName('temControl')[0];
+        $api.fixStatusBar(temControl)
+        var menu = document.getElementsByClassName('menu')[0];
+        $api.fixStatusBar(menu)
+
+        setMilkName()
+        // gizWifiSDK = api.require('gizWifiSDK');
+        // gizWifiDevice = api.require('gizWifiDevice');
+        
+        gizWifiSDK = api.require('GizWifiSDK_Feisi');
+        gizWifiDevice = gizWifiSDK
+        FNScanner = api.require('FNScanner');
+        app.lang = lang
+        
+        if(api.systemType=='ios'){
+            document.getElementById('mainButton').style.fontSize = "25px"
+        }
+
+        // 判断是否为测试使用 如果是的话不进行连接
+        if ($api.getStorage('device').did != "123" && $api.getStorage('device').mac != "测试") {
+            api.showProgress({
+                title: getTranslate('努力加载中') + '...',
+                text: getTranslate('请稍等') + '...',
+                modal: true
+            });
+            setTimeout(function () {
+                startWithAppInfo()
+                // if (isGizWifiSDKStart) {
+                //     // gizWifiSDK.userLogin({
+                //     //     "userName": $api.getStorage('phoneNum'),
+                //     //     "password": '123456'
+                //     // }, function (ret, err) { //回调uid,和token;  
+                //     //     if (ret) {
+                //     //         registerNotifications()
+                //     //     }
+                //     // })
+                //     registerNotifications()
+                // } else {
+                //     setTimeout(function () {
+                //         // api.hideProgress();
+                //         // gizWifiSDK.userLogin({
+                //         //     "userName": $api.getStorage('phoneNum'),
+                //         //     "password": '123456'
+                //         // }, function (ret, err) { //回调uid,和token;  
+                //         //     if (ret) {
+                //         //         registerNotifications()
+                //         //     }
+                //         // })
+                //         registerNotifications()
+                //     }, 2000)
+                // }
+                setTimeout(function () {
+                    // api.hideProgress();
+                    gizWifiSDK.userLogin({
+                        "userName": $api.getStorage('phoneNum'),
+                        "password": '123456'
+                    }, function (ret, err) { //回调uid,和token;  
+                        if (ret) {
+                            gizWifiSDK.getBoundDevices({
+                                "uid":ret.uid,
+                                "token":ret.token
+                            },res=>{
+                                registerNotifications()
+                            })
+                            
+                            
+                        }
+                    })
+                    // registerNotifications()
+                }, 2000)
+            }, 1500)
+            setTimeout(function(){
+                api.hideProgress();
+            },10000)
+        }
+
+        api.ajax({
+            // url: 'http://192.168.1.46:5009/bindDevice',
+            url: 'http://118.178.186.103:5009/bindDevice',
+            method: 'post',
+            timeout: 30,
+            dataType: 'json',
+            returnAll:false,
+            data:{
+                values:{
+                    mac:$api.getStorage('device').mac
+                }
+            }
+        },function(ret,err){
+            if (ret) {
+                // TODO 
+                console.log(JSON.stringify(ret))
+            } else {
+                // api.alert({
+                //     msg:('错误码：'+err.code+'；错误信息：'+err.msg+'网络状态码：'+err.statusCode)
+                // });
+            };
+        });
+        // $api.rmStorage('BrewData')
+    };
+    var app = new Vue({
+        el: "#app",
+        data: {
+            "yield": 150,
+            "alerts": {
+                "Bottleplace": false,
+                "boxPlace": false,
+                "iswater": false,
+                "tempCheck": false,
+                "watertank": false,
+                "mix": false
+            },
+            "lang": {},
+            isKo:false,
+            // 设备版本 默认为1 
+            "dev_version":1
+        },
+        created() {
+            let lang = $api.getStorage('language');
+            if(lang == 'ko'){
+                this.isKo = true
+            }
+        },
+    })
+    var lastPageX = null
+    var TimeOut = null
+    function drawCalibration() {
+        //初始化控制器刻度
+        var calibrations = document.getElementById("calibrations")
+        var control = document.getElementById('control')
+        control.ontouchmove = function (event) {
+            // 在弹出警告时 拒绝控制奶量
+            if (state) {
+                if (lastPageX) {
+                    // 判断当前手指x轴位置与之前记录的手机x轴位置之间的差值是否大于20   即设置手指控制奶量的灵敏度
+                    if (Math.abs(lastPageX - event.touches[0].pageX) > 20) {
+                        controlP(lastPageX - event.touches[0].pageX)
+                        lastPageX = event.touches[0].pageX
+                    }
+                } else {
+                    lastPageX = event.touches[0].pageX
+                }
+            }
+        }
+        control.ontouchend = function () {
+            lastPageX = null
+            if (state) {
+                writeData({
+                    yield: app.yield
+                });
+            }
+            stateTem = false
+            clearTimeout(TimeOut)
+            TimeOut = setTimeout(function(){
+                stateTem = true
+            },300)
+        }
+        calibrations.innerHTML = ""
+        calibrationsArray = []
+        for (var i = 0; i < 37; i++) {
+            var calibration = document.createElement("div");
+            calibration.style.transform = "translate(-50%,-18vh)"
+            calibration.style.transform += "rotate(" + (i * 7.5 - 135) + "deg)"
+            calibrations.appendChild(calibration);
+            calibrationsArray.push(calibration)
+        }
+        // 传0即不改变奶量变量 重新渲染控制器  传>0或者<0则会自动增加或者减少奶量 并且重新渲染控制器 
+        controlP(0)
+    }
+    function openSM(){
+        // api.openWin({
+        //     name: 'Explanation',
+        //     url: './Explanation.html',
+        //     bounces: false,
+        // });
+        api.openWin({
+            name: 'setting',
+            url: './setting.html',
+            bounces: false,
+        });
+    }
+    function controlP(index) {
+        if (index < 0 && app.yield < 240) {
+            app.yield += 10
+        }
+        if (index > 0 && app.yield >= 40) {
+            app.yield -= 10
+        }
+        // 重新渲染控制器颜色
+        controlColor(app.yield)
+    }
+
+    function controlColor(num) {
+        for (var i = 0; i < 37; i++) {
+            if (num >= i * 5 + 60) {
+                // 204,198,236  226,87,96
+                calibrationsArray[i].style.background = 'rgb(' + parseInt((226 - 204) * i / 37 + 204) + ',' + parseInt((
+                    87 - 198) * i / 37 + 198) + ',' + parseInt((96 - 236) * i / 37 + 236) + ')'
+            } else {
+                calibrationsArray[i].style.background = '#EFEEFA'
+            }
+        }
+    }
+    // 泡奶按钮按下时触发的按钮
+    function Bubble() {
+        isShowToastAlarm = true
+        var mixed = 18
+        if ($api.getStorage('milkratio')) {
+            mixed = $api.getStorage('milkratio').milk
+        }
+        var milktype = $api.getStorage('milktype');
+        var milkname = $api.getStorage('milkname');
+        var milkCount = $api.getStorage('milkCount')
+        if((milkname=='美素佳儿'||milkname=='Friso')&&milktype.toString()=='4'){
+            mixed = parseInt(parseInt(mixed)*1.5)
+        }
+        !milkname&&(milkname='')
+        if(milkCount=='9007253104531'||milkname=='贝维他'||milkname.toLowerCase()=='bebivita'){
+            mixed = parseInt(parseInt(mixed)*1.1)
+        }
+        console.log(mixed)
+
+        // if (state&&stateTem) {
+        if (state) {
+            if (document.getElementById('mainButton').innerHTML == getTranslate('冲奶')) {
+                writeData({
+                    Brew: true,
+                    mixed: mixed,
+                    yield: app.yield
+                });
+            }
+        } else {
+            if (document.getElementById('mainButton').innerHTML == getTranslate('冲奶中')) {
+                var nowTime = new Date().getTime()
+                if (toastTime && nowTime - toastTime < 2000) {
+                    state = true
+                    writeData({
+                        Brew: false
+                    });
+                    document.getElementById('mainButton').innerHTML == 'E05'
+                    toastTime = null
+                } else {
+                    toastTime = nowTime
+                    api.toast({
+                        msg: getTranslate('再次按下强制中断泡奶'),
+                        duration: 2000,
+                        location: 'middle'
+                    });
+                }
+            } else {
+                showToast([{
+                    text: getTranslate('当前状态无法进行操作')
+                }])
+            }
+        }
+
+    }
+
+    function toHot(){
+        writeData({
+            hot: true,
+            yield: app.yield
+        });
+    }
+
+    // 开启监听
+    function registerNotifications() {
+        var device = $api.getStorage('device')
+            console.log(JSON.stringify(device))
+            gizWifiDevice.setSubscribe({
+                "subscribed": true,
+                "device": device,
+                "productSecret":$api.getStorage('gizWifiSDK').serect
+            }, function (ret, err) {
+                console.log(JSON.stringify(ret))
+                console.log(JSON.stringify(err))
+                if(ret&&ret.device&&ret.device.did){
+                    device.did = ret.device.did 
+                }
+                
+                gizWifiSDK.bindRemoteDevice({
+                    "uid": $api.getStorage('uid'),
+                    "token": $api.getStorage('token'),
+                    "mac": device.mac,
+                    "productKey": $api.getStorage('gizWifiSDK').produce,
+                    "productSecret": $api.getStorage('gizWifiSDK').serect
+                }, function (ret, err) { 
+                    
+                })
+            });
+            gizWifiDevice.getDeviceStatus({
+                "device": device
+            }, function (ret, err) {  
+                if (err) {
+                    if (err.errorCode == 8029) {
+                        gizWifiDevice.setSubscribe({
+                            "subscribed": true,
+                            "device": device,
+                            "productSecret":$api.getStorage('gizWifiSDK').serect
+                        }, function (ret, err) {
+                            
+                            registerNotifications()
+                        });
+                    } else if (err.errorCode == 8031) {
+                        // 设备未就绪
+                        api.showProgress({
+                            title: getTranslate('设备未就绪'),
+                            text: getTranslate('请检查设备'),
+                            modal: true
+                        });
+                        setTimeout(function(){
+                            api.hideProgress();
+                        },10000)
+                        setTimeout(function () {
+                            registerNotifications()
+                        }, 3000)
+                    } else if(err.errorCode == 8024){
+                        gizWifiSDK.bindRemoteDevice({
+                            "uid": $api.getStorage('uid'),
+                            "token": $api.getStorage('token'),
+                            "mac": device.mac,
+                            "productKey": $api.getStorage('gizWifiSDK').produce,
+                            "productSecret": $api.getStorage('gizWifiSDK').serect
+                        }, function (ret, err) { 
+                            console.log(JSON.stringify(ret)+"###")
+                            console.log(JSON.stringify(err)+"%%%")                                             
+                            registerNotifications()
+                        })
+                    }
+                } else {
+                    if (ret.data) {
+                        app.yield = parseInt(ret.data.yield)
+                        controlColor(app.yield)
+                        if(ret.data.errorCode == 7){
+                            app.dev_version = 2
+                        }else if(ret.data.errorCode == 8){
+                            app.dev_version = 3
+                        }else if(ret.data.errorCode == 0){
+                            app.dev_version = 1
+                        }
+                    }
+                    if (ret) {
+                        api.hideProgress();
+                        getData(ret)
+                        oepnNotification()
+                    } else {
+                        // openWin('choiceDevice', './choiceDevice.html')
+                    }
+                }
+            });
+    }
+
+    function oepnNotification() {
+        var device = $api.getStorage('device')
+        gizWifiDevice.registerNotifications({
+            "device": device
+        }, function (ret, err) { //有警报时
+            if(ret.data){
+                if(ret.data.errorCode == 7){
+                    app.dev_version = 2
+                }else if(ret.data.errorCode == 8){
+                    app.dev_version = 3
+                }else if(ret.data.errorCode == 0){
+                    app.dev_version = 1
+                }
+            }
+            console.log(JSON.stringify(ret))
+            getData(ret)
+        });
+    }
+
+    function getData(data) {
+        // console.log(JSON.stringify(data))
+        var error = {
+            // 有图片的异常
+            tempCheck: getTranslate('水温异常'),
+            Bottleplace: getTranslate('奶瓶放置异常'),
+            boxPlace: getTranslate('粉盒放置异常'),
+            watertank: getTranslate('水箱缺水'),
+            mix: getTranslate('混合仓放置异常'),
+            iswater: getTranslate('冷却仓水量过低'),
+            // 无图异常
+            deviceNotReady: getTranslate('设备未启动'),
+            '1': getTranslate('冷却仓水温过高'),
+            '2': getTranslate('流速不正常'),
+            '3': getTranslate('泡奶温度过高或过低'),
+            '4': getTranslate('奶粉量不正常'),
+            '5': getTranslate('泡奶失败')
+        }
+        var errImg = {
+            tempCheck: '4',
+            Bottleplace: '1',
+            boxPlace: '2',
+            watertank: '3',
+            mix: '6',
+            iswater: '5',
+        }
+        var mainText = getTranslate('冲奶')
+        console.log(JSON.stringify(data))
+        var toastAlarm = []
+        if (data.alerts) {
+            app.alerts = data.alerts
+            for (var i in data.alerts) {
+                if (data.alerts[i]) {
+                    // 统计错误个数
+                    state = false;
+                    if(i == "boxPlace"){
+                        state = true
+                        if(isShowToastAlarm){
+                            isShowToastAlarm = false
+                        }else{
+                            continue
+                        }
+                    }
+                    
+                    toastAlarm.push({
+                        text: error[i],
+                        img: '../image/main/' + errImg[i] + '-2.png'
+                    })
+                }
+            }
+        }
+
+        if (data.data) {
+            if (data.data.hot) {
+                state = false
+                mainText = getTranslate('加热中')
+            }
+            if (data.data.drain) {
+                state = false
+                mainText = getTranslate('排水中')
+            }
+            if (data.data.Brew) {
+                if(mainText == getTranslate('冲奶中')){
+                    isShowToastAlarm = true
+                }
+                state = false
+                addBrewData(app.yield)
+                mainText = getTranslate('冲奶中')
+            }
+            // 有异常报警
+            if (data.data.errorCode != 0&&data.data.errorCode != 6&&data.data.errorCode != 7&&data.data.errorCode != 8) {
+                if(!data.data.hot && !data.data.drain && !data.data.Brew){
+                    toastAlarm.push({
+                        text: error[data.data.errorCode],
+                    })
+                }
+                mainText = 'E0' + data.data.errorCode
+            }
+            // 水量            
+            // if (data.data.yield != app.yield) {
+            //     writeData({
+            //         yield: app.yield
+            //     });
+            // }
+            app.yield = parseInt(data.data.yield)
+            controlColor(app.yield)
+            if (data.data.TempLevel != undefined) {
+                $api.setStorage('TempLevel', data.data.TempLevel);
+                api.execScript({
+                    frameName: 'popup',
+                    script: 'show('+app.dev_version+')'
+                });
+            }
+
+            if(data.data.mixed){
+                
+                var milkratio = $api.getStorage('milkratio') || {}
+                if(milkratio) {
+                    milkratio = {
+                        milk:data.data.mixed
+                    }
+                    document.getElementById('milkratio').innerHTML = getTranslate('单次喂奶')+ milkratio.milk+'g/100ml'
+                    $api.setStorage('milkratio', milkratio);
+                    var milkname = $api.getStorage('milkname') || "机器";
+                    var milktype = $api.getStorage('milktype') || 1;
+                    var milkList = $api.getStorage('milkList');
+                    if (!milkList) {
+                        milkList = []
+                    }
+                    var milkItem = {
+                        "milktype": milktype,
+                        "milkname": milkname,
+                        "milkratio": milkratio
+                    }
+                    var same = 0
+                    for (var i = 0; i < milkList.length; i++) {
+                        if (milkname == milkList[i].milkname) {
+                            milkList[i] = milkItem
+                            same++
+                        }
+                    }
+                    if (same == 0) {
+                        milkList.push(milkItem)
+                    }
+
+                    $api.setStorage('milkList', milkList);
+                }
+                
+            }
+            
+            // 冬季模式 被取消了
+            // if(data.data.seasonMode!=undefined){
+            //     $api.setStorage('seasonMode',data.data.seasonMode)
+            //     api.execScript({
+            //         name: 'setting',
+            //         script: 'setSeason()'
+            //     });
+            // }
+            
+
+        }
+
+        // 没有意义
+        // if (data.netStatus+''!='undefined' && data.netStatus != 2) {
+        //     toastAlarm.push({
+        //         text: error.deviceNotReady,
+        //     })
+        // }
+
+
+        if (toastAlarm.length == 0) {
+            if(mainText == getTranslate('冲奶')){
+                state = true
+            }
+            api.execScript({
+                frameName: 'toast',
+                script: 'hideToast()'
+            });
+        }
+        if (toastAlarm.length > 0) {
+            state = false
+            showToast(toastAlarm)
+        }
+        // if (data.data) {
+        //     if (data.data.hot) {
+        //         state = false
+        //         mainText = getTranslate('加热中')
+        //     }
+        //     if (data.data.drain) {
+        //         state = false
+        //         mainText = getTranslate('排水中')
+        //     }
+        //     if (data.data.Brew) {
+        //         state = false
+        //         mainText = getTranslate('冲奶中')
+        //     }
+        // }
+        document.getElementById('mainButton').innerHTML = mainText
+        
+    }
+
+    function writeData(data) {
+        var device = $api.getStorage('device')
+        // if (state) {
+            gizWifiDevice.write({
+                "device": device,
+                "sn": 0,
+                "data": data
+            }, function (ret, err) {
+                // alert(JSON.stringify(ret))
+                // alert(JSON.stringify(err))
+            })
+        // } else {
+            // 提示泡奶机当前无法操作
+        // }
+        console.log(JSON.stringify(data))
+    }
+    // 打开二维码扫描
+    function openFNS() {
+        FNScanner.open({
+            autorotation: true,
+            isLight: true,
+            isAlbum: true,
+            hintText: getTranslate('对准条形码')
+        }, function (ret, err) {
+            if (ret) {
+                if (ret.eventType == 'success') {
+                    $api.setStorage('milkCount', ret.content);
+                    api.openWin({
+                        name: 'milkSetting',
+                        url: './milkSetting.html',
+                        bounces: false
+                    });
+                } else if (ret.eventType == 'cameraError') {
+                    alert(getTranslate('摄像头访问失败'));
+                } else if (ret.cameraError == 'albumError') {
+                    alert(getTranslate('相册访问失败'));
+                }
+            } else {
+
+            }
+        });
+    }
+
+    function setMilkName() {
+        var milkName = $api.getStorage('milkname')
+        if (milkName) {
+            document.getElementById('milkName').innerHTML = milkName
+        }
+        var milkratio = $api.getStorage('milkratio')
+        if(milkratio) {
+            document.getElementById('milkratio').innerHTML = getTranslate('单次喂奶')+ milkratio.milk+'g/100ml'
+        }
+        if(gizWifiDevice){
+            writeData({
+                mixed: milkratio.milk,
+            });
+        }
+    }
+    // 添加泡奶统计
+    function addBrewData(data) {
+        var date = new Date()
+
+        var today = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
+        var BrewData = $api.getStorage('BrewData')
+        if (!BrewData) {
+            BrewData = []
+        }
+        var num = 0
+        for (var i = 0; i < BrewData.length; i++) {
+            if (BrewData[i].date == today) {
+                num++
+                BrewData[i].data.push({
+                    yield: data,
+                    time: date.getTime()
+                })
+            }
+        }
+        if (num == 0) {
+            if(BrewData.push){
+                BrewData.push({
+                    date: today,
+                    day: date.getDay(),
+                    data: [{
+                        yield: data,
+                        time: date.getTime()
+                    }]
+                })
+            }
+        }
+        if (BrewData.length == 8) {
+            BrewData.shift()
+        }
+        $api.setStorage('BrewData', BrewData)
+        // console.log(JSON.stringify(BrewData))
+    }
+    // 冬季模式 被取消
+    // function changeSeason(){
+    //     var seasonMode = $api.getStorage('seasonMode')
+    //     if(seasonMode=='true'){
+    //         seasonMode = true
+    //     }else if(seasonMode == 'false'){
+    //         seasonMode = false            
+    //     }
+    //     writeData({
+    //         seasonMode: !seasonMode
+    //     });
+    // }
+
+    function changeTemp(index) {
+        writeData({
+            TempLevel: index
+        });
+    }
+    // 显示温度差控制层
+    function showPopup() {
+        api.openFrame({
+            name: 'popup',
+            url: './popup.html',
+            rect: {
+                x: 0,
+                y: 0,
+                w: 'auto',
+                h: 'auto'
+            },
+        });
+        api.execScript({
+            frameName: 'popup',
+            script: 'show('+app.dev_version+')'
+        });
+    }
+
+    // 弹出警告框
+    function showToast(toastAlarm) {
+        api.openFrame({
+            name: 'toast',
+            url: './toast.html',
+            rect: {
+                x: 0,
+                y: 0,
+                w: 'auto',
+                h: 'auto'
+            }
+        });
+
+        api.execScript({
+            frameName: 'toast',
+            script: 'show(' + JSON.stringify(toastAlarm) + ')'
+        });
+    }
+
+    function openMilkSelect(){
+        api.openWin({
+            name: 'milkSelect',
+            url: './milkSelect.html',
+        });
+    }
+</script>
+
+</html>

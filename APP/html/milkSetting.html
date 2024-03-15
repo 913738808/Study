@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+        content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>setting</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <style>
+        html,
+        body {
+            height: 100%;
+            background-color: #fff;
+        }
+
+        .header {
+            width: 100vw;
+            height: 90px;
+            background: url('../image/createLink/header.png') no-repeat;
+            background-size: 100% 100%;
+            position: relative;
+        }
+
+        #title {
+            position: absolute;
+            text-align: center;
+            width: 100%;
+            margin-top: 4vw;
+            color: #fff;
+        }
+
+        #back {
+            position: absolute;
+            height: 5vw;
+            left: 5vw;
+            margin-top: 4vw;
+        }
+
+        .btnList {
+            background-color: #fff;
+            margin-bottom: 9px;
+        }
+
+        .btn {
+            height: 60px;
+            width: 85%;
+            /* width: 65%; */
+            white-space: nowrap;
+            font-size: 15px;
+            color: #E25760;
+            line-height: 60px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 25% 60% 15%;
+        }
+
+        .btnList>hr {
+            margin: 0 auto;
+            width: 85%;
+            height: 1px;
+            background-color: #EFEEFA;
+        }
+
+        .btn>div {
+            margin-left: 15px;
+        }
+
+        .btn>div>input {
+            width: 100%;
+            color: #707070;
+        }
+
+        .btn>div>input::-webkit-input-placeholder {
+            color: #bcbcbc;
+        }
+
+        #linkBtn {
+            width: 65%;
+            position: absolute;
+            bottom: 60px;
+            left: 50%;
+            transform: translate(-50%, 0);
+            height: 40px;
+            background-color: #E04D57;
+            color: #fff;
+            font-size: 18px;
+            text-align: center;
+            line-height: 40px;
+            border-radius: 20px;
+            box-shadow: 0px 3px 10px rgba(226, 87, 96, 0.41);
+        }
+
+        /* 按钮效果 */
+        #linkBtn:hover {
+            -webkit-filter: brightness(90%);
+            /* Chrome, Safari, Opera */
+            filter: brightness(90%);
+        }
+
+        #clearInput {
+            display: none;
+        }
+
+        .btn_content {
+            color: #707070;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <div id="title" i18n="milkSetting.milkSetting">奶粉设置</div>
+        <img id="back" onclick="closeWin()" src="../image/back.png" alt="">
+    </div>
+
+    <div class="btnList">
+        <div class="btn">
+            <div i18n="milkSetting.milkName">奶粉名称</div>
+            <div class="btn_content">
+                <input id="inputMilkName" type="text" placeholder="请输入奶粉名称" oninput="isNull(this.value)">
+            </div>
+            <div><img id="clearInput" onclick="clearInput('')" src="../image/x.png" width="50%" alt="" srcset=""></div>
+        </div>
+        <hr>
+        <div class="btn" onclick="choiceMilkType()">
+            <div i18n="milkSetting.milkGrade">奶粉段位</div>
+            <div class="btn_content" id="milktype">1</div>
+            <div><img src="../image/setting/bottom.png" width="50%" alt="" srcset=""></div>
+        </div>
+
+        <hr>
+        <div class="btn" onclick="choiceMilkRatio()">
+            <div i18n="milkSetting.milkRatio">奶粉配比</div>
+            <div class="btn_content" id="milkratio">18g/100ml</div>
+            <div><img src="../image/setting/bottom.png" width="50%" alt="" srcset=""></div>
+        </div>
+    </div>
+
+    <div id="linkBtn" onclick="Save()" i18n="babyInfo.confirm">
+        确认
+    </div>
+
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script src="../script/lang.js"></script>
+<script src="../script/jquery.min.js"></script>
+<script src="../script/jquery.i18n.min.js"></script>
+<script>
+    var model = null
+    var query = null
+    var UIActionSelector = null
+    apiready = function () {
+        var title = document.getElementById('title')
+        $api.fixStatusBar(title)
+        var back = document.getElementById('back')
+        $api.fixStatusBar(back)
+        UIActionSelector = api.require('UIActionSelector');
+        console.log()
+        if (api.pageParam.index || api.pageParam.index == 0) {
+            var milk = $api.getStorage('milkList')[api.pageParam.index];
+            setData(milk)
+        }
+
+
+
+        model = api.require('model');
+        model.config({
+            appId:'A6021015197294',
+            appKey: '87B5A49E-ED91-EBFB-0245-C7C4C302FFD6',
+            host: 'https://d.apicloud.com'
+        });
+        query = api.require('query');
+
+        api.addEventListener({
+            name: 'choice'
+        }, function (ret, err) {
+            if (ret.value.type == 'choiceMilkType') {
+                document.getElementById('milktype').innerHTML = ret.value.data
+            }
+            if (ret.value.type == 'choiceMilkRatio') {
+                document.getElementById('milkratio').innerHTML = ret.value.data + 'g/100ml'
+            }
+        });
+
+        document.getElementById('inputMilkName').placeholder = getTranslate("请输入奶粉名称")
+        whereEqual($api.getStorage('milkCount'))
+        ChangeLang($api.getStorage('language'))
+    };
+
+    function isNull(value) {
+        // 判断内容是否为空
+        if (value.length > 0) {
+            document.getElementById('clearInput').style.display = 'inline'
+        } else {
+            document.getElementById('clearInput').style.display = 'none'
+        }
+    }
+
+    function clearInput(text) {
+        // 清除或者重置input中的文本
+        document.getElementById('inputMilkName').value = text
+        isNull(text)
+    }
+
+    function whereEqual(milkCount) {
+        // query.createQuery(function (ret, err) {
+        //     if (ret) {
+        //         query.whereEqual({
+        //             qid: ret.qid,
+        //             column: 'milkCount',
+        //             value: milkCount
+        //         });
+
+        //         model.findAll({
+        //             class: "milkTypes",
+        //             qid: ret.qid,
+        //         }, function (ret, err) {
+        //             if (ret) {
+        //                 if (ret.length == 1) {
+        //                     setData(ret[0])
+        //                 } else if (ret.length > 1) {
+        //                     var data = ret[0]
+        //                     for (var i = 0; i < ret.length; i++) {
+        //                         if (ret[i].userID == $api.getStorage('phoneNum')) {
+        //                             data = ret[i]
+        //                         }
+        //                     }
+        //                     setData(data)
+        //                 }else{
+        //                     api.toast({
+        //                         msg: getTranslate('不在数据库需手动设置'),
+        //                         duration: 2000,
+        //                         location: 'bottom'
+        //                     });
+        //                 }
+        //             }else{
+        //                 api.toast({
+        //                     msg: getTranslate('不在数据库需手动设置'),
+        //                     duration: 2000,
+        //                     location: 'bottom'
+        //                 });
+        //             }
+        //         });
+        //     }
+        // });
+        api.ajax({
+            // url: 'http://192.168.0.197:5009/getData',
+            url: 'http://118.178.186.103:5009/getData',
+            method: 'post',
+            timeout: 30,
+            dataType: 'json',
+            returnAll:false,
+            data:{
+                values:{
+                    milkCount:milkCount
+                }
+            }
+        },function(ret,err){
+            if (ret) {
+                // TODO 
+                console.log(JSON.stringify(ret))
+                if(ret.data.length >= 1){
+                    ret.data[0].milkratio = JSON.parse(ret.data[0].milkratio)
+                    setData(ret.data[0])
+                }else{
+                    api.toast({
+                        msg: getTranslate('不在数据库需手动设置'),
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                }
+            }
+        });
+    }
+
+    function setData(data) {
+        var lang = $api.getStorage('language');
+        console.log(lang)
+        if (lang == 'cn') {
+            if (data.milkname) {
+                document.getElementById('inputMilkName').value = data.milkname
+            } else {
+                document.getElementById('inputMilkName').value = data.milknameEn || data.milknameKo
+            }
+        }
+        if (lang == 'en') {
+            if (data.milknameEn) {
+                document.getElementById('inputMilkName').value = data.milknameEn
+            } else {
+                document.getElementById('inputMilkName').value = data.milkname || data.milknameKo
+            }
+        }
+        if (lang == 'ko') {
+            if (data.milknameKo) {
+                document.getElementById('inputMilkName').value = data.milknameKo
+            } else {
+                document.getElementById('inputMilkName').value = data.milkname || data.milknameEn
+            }
+
+        }
+        // document.getElementById('inputMilkName').value = data.milkname
+        document.getElementById('milktype').innerHTML = data.milktype
+        document.getElementById('milkratio').innerHTML = data.milkratio.milk + 'g/100ml'
+    }
+
+    function openChoice(data) {
+        api.openFrame({
+            name: 'choice',
+            url: './choice.html',
+            bounces: false,
+            rect: {
+                x: 0,
+                y: 0,
+                w: 'auto',
+                h: 'auto'
+            },
+            pageParam: data
+        });
+    }
+    // 选择奶粉段位
+    function choiceMilkType() {
+        // openChoice({
+        //     data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+        //     type: 'choiceMilkType',
+        //     default:0
+        // })
+        openUIActionSelector(
+            [{
+                name: 1
+            }, {
+                name: 2
+            }, {
+                name: 3
+            }, {
+                name: 4
+            }, {
+                name: 5
+            }, {
+                name: 6
+            }, {
+                name: 7
+            }, {
+                name: 8
+            }, {
+                name: 9
+            }, {
+                name: 10
+            }, {
+                name: 11
+            }, {
+                name: 12
+            }, {
+                name: 13
+            }, {
+                name: 14
+            }, {
+                name: 15
+            }],
+            'choiceMilkType',
+            0
+        )
+
+    }
+
+    function choiceMilkRatio() {
+        // openChoice({
+        //     data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16,17,18,19,20,21,22,23],
+        //     type: 'choiceMilkRatio',
+        //     default:14
+        // })
+        openUIActionSelector(
+            [{
+                name: 1
+            }, {
+                name: 2
+            }, {
+                name: 3
+            }, {
+                name: 4
+            }, {
+                name: 5
+            }, {
+                name: 6
+            }, {
+                name: 7
+            }, {
+                name: 8
+            }, {
+                name: 9
+            }, {
+                name: 10
+            }, {
+                name: 11
+            }, {
+                name: 12
+            }, {
+                name: 13
+            }, {
+                name: 14
+            }, {
+                name: 15
+            }, {
+                name: 16
+            }, {
+                name: 17
+            }, {
+                name: 18
+            }, {
+                name: 19
+            }, {
+                name: 20
+            }, {
+                name: 21
+            }, {
+                name: 22
+            }, {
+                name: 23
+            }],
+            'choiceMilkRatio',
+            17
+        )
+    }
+
+    function openUIActionSelector(data, type, index) {
+
+        UIActionSelector.open({
+            datas: data,
+            bgCorner: 15,
+            lineColor: '#fff',
+            selectorDividerColor: '#EFEEFA',
+            layout: {
+                row: 3,
+                col: 1,
+                height: 35,
+                size: 14,
+                sizeActive: 18,
+                rowSpacing: 5,
+                colSpacing: 10,
+                maskBg: 'rgba(0,0,0,0.3)',
+                leftMargin: 30,
+                rightMargin: 30,
+                bg: '#fff',
+                color: '#E25760',
+                colorActive: '#E25760',
+                colorSelected: '#E25760'
+            },
+            animation: true,
+            cancel: {
+                text: getTranslate('取消'),
+                size: 16,
+                w: 90,
+                h: 35,
+                bg: '#fff',
+                bgActive: '#ccc',
+                color: '#888',
+                colorActive: '#fff'
+            },
+            ok: {
+                text: getTranslate('确定'),
+                size: 16,
+                w: 90,
+                h: 35,
+                bg: '#fff',
+                bgActive: '#ccc',
+                color: '#888',
+                colorActive: '#fff'
+            },
+            title: {
+                text: '',
+                size: 12,
+                h: 30,
+                bg: '#fff',
+                color: '#888'
+            },
+            fixedOn: api.frameName,
+            actives: [index]
+        }, function (ret, err) {
+            if (ret) {
+                console.log(JSON.stringify(ret.level1));
+                if (ret.level1) {
+                    api.sendEvent({
+                        name: 'choice',
+                        extra: {
+                            data: ret.level1,
+                            type: type
+                        }
+                    });
+                }
+            } else {
+                // alert(JSON.stringify(err));
+            }
+        });
+    }
+
+    function Save() {
+        var milktype = parseInt(document.getElementById('milktype').innerHTML)
+        var milkname = document.getElementById('inputMilkName').value
+        if (api.pageParam.index || api.pageParam.index == 0) {
+            var milkList = $api.getStorage('milkList');
+            var a = milkList.splice(api.pageParam.index, 1);
+            $api.setStorage('milkList', milkList);
+        }
+        if (milkname == '') {
+            api.toast({
+                msg: '请输入奶粉名称',
+                duration: 2000,
+                location: 'bottom'
+            });
+            return
+        }
+        var milkratio = {
+            milk: document.getElementById('milkratio').innerHTML.split('g')[0]
+        }
+        // model.insert({
+        //     class: 'milkTypes',
+        //     value: {
+        //         milktype: milktype,  //奶粉段位
+        //         milkname: milkname,  //奶粉名称
+        //         milkratio: milkratio, 
+        //         milkCount: $api.getStorage('milkCount'),
+        //         userID: $api.getStorage('phoneNum'),
+        //     }
+        // }, function(ret, err){
+        //     if( ret ){
+        $api.setStorage('milktype', milktype)
+        $api.setStorage('milkname', milkname)
+        $api.setStorage('milkratio', milkratio)
+        addToList(milktype, milkname, milkratio)
+        api.execScript({
+            name: 'Group',
+            frameName: 'main',
+            script: 'setMilkName()'
+        });
+        api.execScript({
+            name: 'milkSelect',
+            script: 'initList();'
+        });
+        api.closeWin();
+        // }
+        // });
+    }
+
+    function closeWin() {
+        api.closeWin();
+    }
+
+    function addToList(milktype, milkname, milkratio) {
+        var milkList = $api.getStorage('milkList');
+        if (!milkList) {
+            milkList = []
+        }
+        var milkItem = {
+            "milktype": milktype,
+            "milkname": milkname,
+            "milkratio": milkratio
+        }
+        var same = 0
+        for (var i = 0; i < milkList.length; i++) {
+            if (JSON.stringify(milkList[i]) == JSON.stringify(milkItem)) {
+                same++
+                break
+            }
+        }
+        if (same == 0) {
+            milkList.push(milkItem)
+            $api.setStorage('milkList', milkList);
+        }
+    }
+</script>
+
+</html>

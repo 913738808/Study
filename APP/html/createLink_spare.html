@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+        content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>备用连接方案</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <style>
+        html,
+        body {
+            height: 100%;
+        }
+
+        .header {
+            width: 100vw;
+            height: 90px;
+            background: url('../image/createLink/header.png') no-repeat;
+            background-size: 100% 100%;
+            position: relative;
+        }
+
+        #title {
+            position: absolute;
+            text-align: center;
+            width: 100%;
+            margin-top: 4vw;
+            color: #fff;
+        }
+
+        #back {
+            position: absolute;
+            height: 5vw;
+            left: 5vw;
+            margin-top: 4vw;
+        }
+
+        .inputPass {
+            width: 90vw;
+            height: 150px;
+            background-color: #fff;
+            margin: 20px auto;
+            border-radius: 10px;
+            box-shadow: 0 0 8px rgba(241, 99, 45, 0.22);
+
+        }
+
+        .help {
+            width: 100vw;
+            overflow: hidden;
+            height: calc((92vh - 210px)/2 - 30px);
+        }
+
+        .help>img {
+            margin: 0 auto;
+            display: block;
+        }
+
+        #linkBtn {
+            width: 50%;
+            margin: 0 auto;
+            height: 40px;
+            background-color: #E04D57;
+            color: #fff;
+            font-size: 18px;
+            text-align: center;
+            line-height: 40px;
+            border-radius: 20px;
+            box-shadow: 0px 3px 10px rgba(226, 87, 96, 0.41);
+        }
+
+        .wifiName {
+            width: 100%;
+            height: 50px;
+            font-size: 13px;
+            color: #E25760;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .pass {
+            height: 50px;
+            width: 100%;
+        }
+
+        .pass>input {
+            width: 70%;
+            margin: 0 auto;
+            border: 1px solid #bbb4df;
+            border-radius: 5px;
+            height: 30px;
+            display: block;
+            font-size: 12px;
+            color: #bcbcbc;
+            padding-left: 10px;
+            letter-spacing: 0.2rem;
+        }
+
+        .pass>input::-webkit-input-placeholder {
+            font-size: 12px;
+            color: #bcbcbc;
+        }
+
+        .pass>input:focus {
+            outline: none;
+        }
+
+        .icon {
+            color: #fff;
+            position: relative;
+            display: block;
+            width: 24px;
+        }
+
+        .icon>img {
+            display: block;
+        }
+
+        .icon>p {
+            display: block;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            color: #fff;
+            font-size: 12px;
+        }
+
+        table {
+            width: 80vw;
+            margin: 0 auto;
+        }
+
+        table>tbody>tr>td:first-child {
+            width: 10%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        table>tbody>tr>td:last-child {
+            width: 90%;
+            text-align: center;
+            color: #E25760;
+            font-size: 12px;
+            vertical-align: top;
+        }
+
+        table>tbody>tr>td:last-child>p {
+            display: inline;
+            background-color: rgb(97, 65, 67);
+            background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0) 49%, #FFEEEE 50%, #FFEEEE);
+            background: -moz-linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0) 49%, #FFEEEE 50%, #FFEEEE);
+            background: -webkit-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0) 49%, #FFEEEE 50%, #FFEEEE);
+            background: -webkit-linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0) 49%, #FFEEEE 50%, #FFEEEE);
+            background: -o-linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0) 49%, #FFEEEE 50%, #FFEEEE);
+            background: -ms-linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0) 49%, #FFEEEE 50%, #FFEEEE);
+        }
+        span{
+            white-space:nowrap;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <div id="title" i18n="createLink.open_spare">连接冲奶机</div>
+        <img id="back" onclick="closeWin()" src="../image/back.png" alt="">
+    </div>
+    <div class="inputPass">
+        <div class="wifiName"><img src="../image/createLink/wifi.png" height="13px" width="18px" alt=""
+                srcset="">&nbsp;<p id="WifiSSID">123</p></div>
+        <div class="pass">
+            <input type="text" placeholder="请输入家庭WIFI名称" id="family_wifi_name">
+        </div>
+        <div class="pass">
+            <input type="text" placeholder="请输入WiFi密码" id="password">
+        </div>
+    </div>
+
+    <table>
+        <tr>
+            <td></td>
+            <td style="font-size: 15px">
+                <span i18n="help.Connect">连接步骤</span>
+                <br>
+                <img src="../image/createLink/bottom.png" height="8px" alt="" srcset="">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div class="icon">
+                    <img src="../image/createLink/lbx.png" width="100%" alt="" srcset="">
+                    <p>1</p>
+                </div>
+                <img src="../image/createLink/line.png" height="20px" alt="" srcset="">
+            </td>
+            <td>
+                <p>&nbsp;<span i18n="help.LongPressCut">长按减号键开启备用配置方案</span>&nbsp;</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div class="icon">
+                    <img src="../image/createLink/lbx.png" width="100%" alt="" srcset="">
+                    <p>2</p>
+                </div>
+                <img src="../image/createLink/line.png" height="20px" alt="" srcset="">
+            </td>
+            <td>
+                <p>&nbsp;<span i18n="help.XPG">将Wi-Fi切换为XPG-GAgent-xxx</span>&nbsp;</p>
+                <p>&nbsp;<span i18n="help.defalut">默认密码</span>&nbsp;</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div class="icon">
+                    <img src="../image/createLink/lbx.png" width="100%" alt="" srcset="">
+                    <p>3</p>
+                </div>
+                <img src="../image/createLink/line.png" height="20px" alt="" srcset="">
+            </td>
+            <td>
+                <p>&nbsp;<span i18n="help.inputwifi">输入WIFI密码开始连接</span>&nbsp;</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div class="icon">
+                    <img src="../image/createLink/lbx.png" width="100%" alt="" srcset="">
+                    <p>4</p>
+                </div>
+            </td>
+            <td>
+                <p>&nbsp;<span i18n="help.clickbtn">点击下方按钮</span>&nbsp;</p>
+            </td>
+        </tr>
+        <!-- <tr>
+            <td>
+                <div class="icon">
+                    <img src="../image/createLink/lbx.png" width="100%" alt="" srcset="">
+                    <p>1</p>
+                </div>
+                <img src="../image/createLink/line.png" height="20px" alt="" srcset="">
+            </td>
+            <td>
+                <p>&nbsp;<span i18n="help.openWifi">开启手机WiFi和位置信息</span>&nbsp;</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div class="icon">
+                    <img src="../image/createLink/lbx.png" width="100%" alt="" srcset="">
+                    <p>2</p>
+                </div>
+                <img src="../image/createLink/line.png" height="20px" alt="" srcset="">
+            </td>
+            <td>
+                <p>&nbsp;<span i18n="help.LongPress">长按冲奶机上加号键开启WiFi配置</span>&nbsp;</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div class="icon">
+                    <img src="../image/createLink/lbx.png" width="100%" alt="" srcset="">
+                    <p>3</p>
+                </div>
+                <img src="../image/createLink/line.png" height="20px" alt="" srcset="">
+            </td>
+            <td>
+                <p>&nbsp;<span i18n="help.enterPass">输入WIFI密码开始连接</span>&nbsp;</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div class="icon">
+                    <img src="../image/createLink/lbx.png" width="100%" alt="" srcset="">
+                    <p>4</p>
+                </div>
+                <img src="../image/createLink/line.png" height="20px" alt="" srcset="">
+            </td>
+            <td>
+                <p>&nbsp;<span i18n="help.same">连入同一个WiFi信号</span>&nbsp;</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div class="icon">
+                    <img src="../image/createLink/lbx.png" width="100%" alt="" srcset="">
+                    <p>5</p>
+                </div>
+            </td>
+            <td>
+                <p>&nbsp;<span i18n="help.success">冲奶机WiFi指示灯亮起来表示连接成功</span>&nbsp;</p>
+            </td>
+        </tr> -->
+
+    </table>
+    <!-- <div class="help">
+        <img src="../image/createLink/help2.png" height="90%" alt="" srcset="">
+    </div> -->
+    <div class="help">
+        <img src="../image/createLink/help1.png" height="90%" alt="" srcset="">
+    </div>
+    <div id="linkBtn" onclick="setDeviceOnboardingDeploy()" i18n="createLink.startCon">
+        开启连接
+    </div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script src="../script/lang.js"></script>
+<script src="../script/jquery.min.js"></script>
+<script src="../script/jquery.i18n.min.js"></script>
+<!-- <script src="../script/public.js"></script> -->
+<script>
+    
+    apiready = function () {
+        var title = document.getElementById('title')
+        $api.fixStatusBar(title)
+        var back = document.getElementById('back')
+        $api.fixStatusBar(back)
+        
+        document.getElementById('password').placeholder = getTranslate('请输入WiFi密码')
+
+        var family_wifi_name = $api.getStorage('wifiSSID_target');
+        if(family_wifi_name){
+            document.getElementById('family_wifi_name').value = family_wifi_name
+        }
+
+        setInterval(function(){
+            api.sendEvent({
+                name: 'getWifiSSID',
+            });
+        },500)
+        api.addEventListener({
+            name: 'ssid_callback'
+        }, function(ret, err){
+            var wifi_ssid_dev = ret.value.ssid
+            document.getElementById('WifiSSID').innerHTML = wifi_ssid_dev
+        });
+        ChangeLang($api.getStorage('language'))                                
+    };
+
+    function setDeviceOnboardingDeploy() {
+        var ssid = document.getElementById('WifiSSID').innerHTML
+        var password = document.getElementById('password').value
+        var family_ssid = document.getElementById('family_wifi_name').value
+        
+        if(ssid.indexOf('XPG-GAgent-')==-1){
+            api.alert({
+                title: getTranslate('wifi错误'), 
+                msg: getTranslate('请将wifi切换为XPG-GAgent-xxx')
+            });
+            return false
+        }
+
+        if(password.length==0){
+            api.toast({
+                msg: getTranslate('请输入家庭wifi密码'),
+                duration: 2000,
+                location: 'bottom'
+            });
+            return false
+        }
+
+        if(family_ssid.length==0){
+            api.toast({
+                msg: getTranslate('请输入家庭wifi名称'),
+                duration: 2000,
+                location: 'bottom'
+            });
+            return false
+        }
+        
+        api.showProgress({
+            title: getTranslate('正在配置'),
+            text: getTranslate('请稍后'),
+            modal:  true
+        });
+
+        var script = `setDeviceOnboardingDeploy_spare('${family_ssid}','${password}','${ssid}')`
+
+        // var script = `setDeviceOnboardingDeploy('${ssid}','${password}')`
+        api.execScript({
+            name: 'choiceDevice',
+            script: script
+        });
+    }
+
+    function closeWin(){
+        api.closeWin();
+    }
+
+    function createSuccess(){
+        api.hideProgress();
+        closeWin()
+    }
+    function createFail(){
+        api.hideProgress();
+        api.toast({
+            msg: getTranslate('配置失败'),
+            duration: 2000,
+            location: 'bottom'
+        });
+    }
+</script>
+
+</html>

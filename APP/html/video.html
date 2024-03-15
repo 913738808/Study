@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+        content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>安装视频</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <style>
+        html,
+        body {
+            height: 100%;
+            background-color: #F4F4F4;
+            position: relative;
+        }
+
+        .header {
+            width: 100vw;
+            height: 190px;
+            background: url('../image/baby/header.png') no-repeat;
+            background-size: 100% 100%;
+            position: relative;
+        }
+
+        #title {
+            position: absolute;
+            text-align: center;
+            width: 100%;
+            margin-top: 4vw;
+            color: #fff;
+        }
+
+        #back {
+            position: absolute;
+            height: 5vw;
+            left: 5vw;
+            margin-top: 4vw;
+        }
+        .main{
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%,-50%);
+            width: 90%;
+            height: 80%;
+            background-color: #fff;
+            box-shadow: 0px 2px 10px rgba(217,147,147, 0.37);
+            border-radius: 25px;
+        }
+
+        .btnList{
+            margin-bottom: 9px;
+            margin-top: 9px;
+        }
+        .btn{
+            /* height: 60px; */
+            width: 85%;
+            font-size: 14px;
+            color: #707070;
+            line-height: 60px;
+            margin: 0 auto;
+            display:flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .btn>input{
+            text-align: right;
+        }
+        .btnList>hr{
+            margin: 0 auto;
+            width: 85%;
+            height: 1px;
+            background-color: #EFEEFA;
+        }
+        .btn>div{
+            margin: 0 15px;
+            color: #E25760;
+            font-size: 15px;
+        }
+        #linkBtn {
+            width: 65%;
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translate(-50%,0);
+            height: 40px;
+            background-color: #E04D57;
+            color: #fff;
+            font-size: 18px;
+            text-align: center;
+            line-height: 40px;
+            border-radius: 20px;
+            box-shadow: 0px 3px 10px rgba(226, 87, 96, 0.41);
+        }
+        /* 按钮效果 */
+        #linkBtn:hover{
+            -webkit-filter: brightness(90%); /* Chrome, Safari, Opera */
+            filter: brightness(90%);
+        }
+        .sex{
+            width: 50%;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .sex>div{
+            height: 30px;
+            width: 45%;
+            font-size: 13px;
+            box-shadow:0 0 4px rgba(226,87,96,0.22);
+            border-radius: 15px; 
+            line-height: 30px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0.3;
+        }
+        #boy{
+            color: #b4d1f4;
+        }
+        #girl{
+            color: #f4b4b4;
+        }
+        .babyName{
+            color: #707070;
+            text-align: right;
+            font-size: 15px;
+            width: 50%;
+            margin-right: 15px;
+        }
+        /* .home-video {
+            z-index: 100;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            min-width: 100%;
+            min-height: 100%;
+            object-fit: fill;
+            width: auto;
+            height: auto;
+            -ms-transform: translateX(-50%) translateY(-50%);
+            -webkit-transform: translateX(-50%) translateY(-50%);
+            transform: translateX(-50%) translateY(-50%);
+            background-size: cover;
+        } */
+        .video{
+            width: 80%;
+            margin: 0 auto;
+            height: 150px;
+            /* background-color: red; */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <div id="title" i18n="setting.video">安装视频</div>
+        <img id="back" onclick="closeWin()" src="../image/back.png" alt="">
+    </div>
+
+    <div class="main">
+        <div class="btnList">
+            <div class="btn">
+                <div onclick="oepnVideo(3)" i18n="video.btn1">粉盒拆解</div>
+            </div>     
+            <hr>     
+            <div class="btn">
+                <div onclick="oepnVideo(2)" i18n="video.btn2">粉盒安装</div>
+            </div>        
+            <hr>   
+            <div class="btn">
+                <div onclick="oepnVideo(1)" i18n="video.btn3">不锈钢件拆装</div>
+            </div>
+            <hr>   
+            <div class="btn">
+                <div onclick="oepnVideo(4)" i18n="video.btn4">视频教程</div>
+            </div>
+        </div>
+<!-- 
+        <div id="linkBtn" onclick="Save()" i18n="babyInfo.confirm">
+            确认
+        </div> -->
+    </div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script src="../script/lang.js"></script>
+<script src="../script/jquery.min.js"></script>
+<script src="../script/jquery.i18n.min.js"></script>
+<script>
+    var boy = null
+    var girl = null
+    var SexSelect = null
+    var videoPlayer
+    apiready = function () {
+        videoPlayer = api.require('videoPlayer');
+        var title = document.getElementById('title')
+        $api.fixStatusBar(title)
+        var back = document.getElementById('back')
+        $api.fixStatusBar(back)
+
+        boy = document.getElementById('boy')
+        girl = document.getElementById('girl')
+        api.addEventListener({
+            name: 'choice'
+        }, function (ret, err) {
+            if(ret.value.type=='choiceBabyYear'){
+                document.getElementById('babyYear').innerHTML = ret.value.data
+            }
+        });
+        // init()
+        ChangeLang($api.getStorage('language'))                
+    };
+    function selectSex(sex){
+        if(sex == 'girl'){
+            boy.style.opacity = '0.3'
+            girl.style.opacity = '1'
+        }else if(sex == 'boy'){
+            boy.style.opacity = '1'
+            girl.style.opacity = '0.3'
+        }
+        SexSelect = sex
+    }
+    function oepnVideo(index){
+        // var module = api.require('easyVideoPlayer');
+        // var param = {
+        //     msg : 'http://118.178.186.103:8080/paonaiji/历史视频/video'+index+'.mp4'
+        // };
+        // module.playVideo(param);
+        videoPlayer.play({
+            texts: {
+                head: {
+                    title: ''
+                }
+            },
+            styles: {
+                head: {
+                    bg: 'rgba(0,0,0,0.7)',
+                    height: 54,
+                    titleSize: 20,
+                    titleColor: '#fff',
+                    backSize: 50,
+                    setSize: 22,
+                },
+                foot: {
+                    bg: 'rgba(0.5,0.5,0.5,0.7)',
+                    height: 44,
+                    playSize: 22,
+                    nextSize: 0,
+                    timeSize: 14,
+                    timeColor: '#fff',
+                }
+            },
+            path: 'http://118.178.186.103:8080/paonaiji/video'+index+'.mp4', //（可选项）字符串类型；文档的路径，支持网络和本地（fs://）路径；默认：未传值时不播放
+            //在 android 平台上不支持 widget://
+            autoPlay: true //（可选项）布尔类型；打开时是否自动播放；默认：true（自动播放）
+        }, function(ret, err) {
+            if (ret) {
+                // alert(JSON.stringify(ret));
+            } else {
+                // alert(JSON.stringify(err));
+            }
+        });
+    }
+    // 选择宝宝年龄
+    function choiceBabyYear() {
+        openChoice({
+            data: ['1个月','2个月','3个月','4个月','5个月','6个月','7个月','8个月','9个月','10个月','11个月'
+            ,'12个月','1岁1个月','1岁2个月','1岁3个月','1岁4个月','1岁5个月','1岁6个月','1岁7个月','1岁8个月',
+            '1岁9个月','1岁10个月','1岁11个月','2岁'
+            ],
+            type: 'choiceBabyYear',
+            default:3
+        })
+    }
+    function openChoice(data) {
+        api.openFrame({
+            name: 'choice',
+            url: './choice.html',
+            bounces: false,
+            rect: {
+                x: 0,
+                y: 0,
+                w: 'auto',
+                h: 'auto'
+            },
+            pageParam: data
+        });
+    }
+    function init(){
+        var babyInfo = $api.getStorage('babyInfo')
+        if(babyInfo){
+            document.getElementById('babyName').value = babyInfo.name
+            document.getElementById('babyYear').value = babyInfo.year
+            selectSex(babyInfo.sex)
+        }
+    }
+    function Save(){
+        var name = document.getElementById('babyName').value
+        var year = document.getElementById('babyYear').value
+        var babyInfo = {
+            name:name,
+            year:year,
+            sex:SexSelect
+        }
+        $api.setStorage('babyInfo',babyInfo)
+        api.toast({
+            msg: getTranslate('保存成功'),
+            duration: 2000,
+            location: 'bottom'
+        });
+        api.execScript({
+            name:'Group',
+            frameName: 'baby',
+            script:'setBabyName();'
+        });
+    }
+
+    function closeWin(){
+        api.closeWin();
+    }
+</script>
+
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+        content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>toast</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/toast.css" />
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            background-color: rgba(0, 0, 0, 0);
+            position: relative;
+        }
+        .toastBG{
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script src="../script/jquery.min.js"></script>
+<script src="../script/jquery.i18n.min.js"></script>
+<script src="../script/lang.js"></script>
+<script>
+    var ToastTimer = null
+    apiready = function () {
+        initToast()
+        // 先隐藏 初始化这个frame 是在打开Group页面的时候  这时候还没有提示需要弹出
+        document.getElementsByTagName('body')[0].style.display = 'none'
+        ChangeLang($api.getStorage('language'))        
+    };
+
+    function hideToast(){
+        api.sendFrameToBack({
+            from: 'toast',          
+        });
+        clearInterval(ToastTimer)
+        ToastTimer = null
+        document.getElementsByTagName('body')[0].style.display = 'none'
+    }
+    function initToast(){
+        document.getElementsByTagName('body')[0].innerHTML +=  toastDOM
+    }
+    function show(toastAlarm){
+        // 先清除定时器 防止在已经显示提示框的时候再次显示 造成定时器叠加
+        clearInterval(ToastTimer)
+        ToastTimer = null
+
+        document.getElementsByTagName('body')[0].style.display = 'block'
+        var toastAlarm = toastAlarm
+        var ToastImg = document.getElementById('ToastImg')
+        var ToastText = document.getElementById('ToastText')
+        var index = 1
+        if(toastAlarm[0]){
+            if(toastAlarm[0].img){
+                ToastImg.src = toastAlarm[0].img
+            }else{
+                ToastImg.src = ''
+            }
+            ToastText.innerHTML = toastAlarm[0].text
+        }
+        
+        if(toastAlarm.length>1){  
+            // 当传入参数长度大于1时开启定时器
+            ToastTimer = setInterval(function(){
+                if(index>=toastAlarm.length){
+                    index = 0
+                }
+                if(toastAlarm[index].img){
+                    ToastImg.src = toastAlarm[index].img
+                }else{
+                    ToastImg.src = ''
+                }
+                ToastText.innerHTML = toastAlarm[index].text
+                index++
+            },2000)
+        }
+    }
+    var toastDOM = `
+        <div class="toastBG" id="toastBG" onclick="hideToast()">
+            <div class="toast">
+            <div class="toast_title">
+                <img id="ToastImg" height="30px" alt="" srcset="">&nbsp;&nbsp;<p id="ToastText"></p>
+            </div>
+            <div class="toastbtn">
+                <div class="toast_leftbtn" id="cancel" i18n="login.cancel">取消</div>
+                <div class="toast_rightbtn" i18n="login.confirm" id="confirm">确认</div>                
+            </div>
+            </div>
+        </div>
+    `
+</script>
+
+</html>

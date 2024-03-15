@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+        content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>choiceDevice</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <style>
+        html,
+        body {
+            height: 100%;
+        }
+
+        .header {
+            width: 100vw;
+            height: 90px;
+            background: url('../image/createLink/header.png') no-repeat;
+            background-size: 100% 100%;
+            position: relative;
+        }
+
+        #title {
+            position: absolute;
+            text-align: center;
+            width: 100%;
+            margin-top: 4vw;
+            color: #fff;
+        }
+
+        #back {
+            position: absolute;
+            height: 5vw;
+            left: 5vw;
+            margin-top: 4vw;
+        }
+
+        .text {
+            font-size: 16px;
+            letter-spacing: 3.3px;
+            color: #E04D57;
+            text-align: center;
+            margin-top: 20px;
+            font-family: pf2;
+        }
+        .deviceList>div:active{
+            transform: scale(0.95);
+        }
+        .deviceList>div {
+            transition: all ease-in-out 0.2s;
+            width: 70vw;
+            height: 18vw;
+            border-radius: 9vw;
+            margin: 20px auto;
+            background-color: #E25760;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            box-shadow: 0px 3px 10px rgba(226, 87, 96, 0.41);
+        }
+
+        .addDevice {
+            width: 70vw;
+            height: 15vw;
+            border-radius: 7.5vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0px 0px 8px rgba(249, 189, 166, 0.36);
+            margin: 0 auto;
+            margin-top: 60px;
+            color: #E04D57;
+        }
+        .bot{
+            width: 100%;
+            height: 60px;
+        }
+        .video{
+            position: absolute;
+            left: 5vw;
+            color: #ffffff;
+            margin-top: 4vw;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header" id="header">
+        <div id="title" i18n="choiceDevice.connectDevice">连接冲奶机</div>
+        <!-- <div id="video" class="video" onclick="openVideo()" i18n="choiceDevice.Tutorials">教程</div> -->
+        <!-- <img id="back" onclick="openWin('login','./login.html')" src="../image/back.png" alt=""> -->
+    </div>
+    <div class="text" i18n="choiceDevice.choiceDevice">请选择设备</div>
+
+    <div class="deviceList">
+
+    </div>
+
+    <div class="addDevice" onclick="addDevice()">
+        <img src="../image/choiceDevice/add.png" height="50%" alt="">
+        &nbsp;&nbsp;<p i18n="choiceDevice.addDevice">添加设备</p>
+    </div>
+    <div class="bot"></div>
+    
+
+    <!-- <div class="addDevice" onclick="openTest()">
+        <img src="../image/choiceDevice/add.png" height="50%" alt="">
+        &nbsp;&nbsp;<p>openTest</p>
+    </div> -->
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script src="../script/lang.js"></script>
+<script src="../script/toast.js"></script>
+<script src="../script/jquery.min.js"></script>
+<script src="../script/jquery.i18n.min.js"></script>
+<script src="../script/public.js"></script>
+<script>
+    var backTime = null
+    var gizWifiSDK = null
+    var isGizWifiSDKStart = false
+    var gizWifiDevice = null
+    apiready = function () {
+        // model = api.require('model');
+        // model.config({
+        //     appId:'A6021015197294',
+        //     appKey: '87B5A49E-ED91-EBFB-0245-C7C4C302FFD6',
+        //     host: 'https://d.apicloud.com'
+        // });
+        // query = api.require('query');
+        // query.createQuery(function (ret, err) {
+        //     if (ret) {
+        //         query.whereEqual({
+        //             qid: ret.qid,
+        //             column: 'milkCount',
+        //             value: '6907992633480'
+        //         });
+        //         model.findAll({
+        //             class: "milkTypes",
+        //             qid: ret.qid
+        //         }, function( ret, err ) {
+        //             if( ret ){
+        //                 alert( JSON.stringify( ret ) );   
+        //             }else{
+        //                 alert( JSON.stringify( err ) );
+        //             }
+        //         });
+        //     } 
+        // });
+        var title = document.getElementById('title')
+        // var video = document.getElementById('video')
+        $api.fixStatusBar(title)
+        // $api.fixStatusBar(video);
+        closeAPP()
+        // gizWifiSDK = api.require('gizWifiSDK');
+        // gizWifiDevice = api.require('gizWifiDevice');
+        gizWifiSDK = api.require('GizWifiSDK_Feisi');
+        gizWifiDevice = gizWifiSDK
+        if(!$api.getStorage('admin')){
+            api.showProgress({
+                title: getTranslate('努力加载中') + '...',
+                text: getTranslate('请稍等') + '...',
+                modal: true
+            });
+        }
+        
+        startWithAppInfo()
+        if (isGizWifiSDKStart) {
+            initDeviceList()
+        } else {        
+            setTimeout(function () {
+                initDeviceList()
+            }, 2000)
+        }
+        
+        
+        // 检查是否为测试登录
+        inspectionAdmin()
+        ChangeLang($api.getStorage('language'))
+        api.addEventListener({
+            name: 'getWifiSSID'
+        }, function(ret, err){
+            getWifiSSID_spare()
+            
+            // bindDevice({
+            //     did:"Bujl9w785YCezVVGUPOSCb",
+            //     mac:"b8d61a726c90"
+            // })
+        });
+    };
+
+    function oepnDevice(mac,did) {
+        var device = {
+            mac:mac,
+            did:did
+        }
+        $api.setStorage('device', device)
+        openWin('Group', './Group.html')
+        api.execScript({
+            name: 'Group',
+            frameName: 'main',
+            script: 'registerNotifications()'
+        });
+    }
+    function inspectionAdmin(){
+        if($api.getStorage('admin')){
+            var ret = {
+                devices:[]
+            }
+            ret.devices.push({
+                did:"123",
+                mac:"测试"
+            })
+            var list = document.getElementsByClassName('deviceList')[0]
+            list.innerHTML = ''
+            
+            for (var i = 0; i < ret.devices.length; i++) {
+                var DOM = `
+                <div onclick="oepnDevice('${ret.devices[i].mac}','${ret.devices[i].did}')">
+                    <img src="../image/choiceDevice/logo.png" height="70%" alt="">
+                    &nbsp;&nbsp;<p>${ret.devices[i].mac}</p>
+                </div>
+                `
+                list.innerHTML += DOM
+            }
+        }
+    }
+    // var touchStartTime = 0
+    var touchTimer = null
+    function startTouch(evt,did,mac){
+        // touchStartTime = new Date().getTime()
+        console.log(did)
+        console.log(mac)
+        if(!touchTimer){
+            touchTimer = setTimeout(function(){
+                api.confirm({
+                    title: getTranslate('是否解绑设备'),
+                    msg: getTranslate('按下确定将会解绑设备')+':'+mac,
+                    buttons: [getTranslate('确定'), getTranslate('取消')]
+                }, function(ret, err) {
+                    var index = ret.buttonIndex;
+                    if(index==1){
+                        gizWifiSDK.unbindDevice({
+                            "uid": $api.getStorage('uid'),
+                            "token": $api.getStorage('token'),
+                            "did": did    
+                        }, function(ret, err) {
+                            initDeviceList()
+                        });
+                    }
+                });                
+            },1000)
+        }else{
+            clearTimeout(touchTimer)
+            touchTimer = null
+            startTouch(null,did,mac)
+        }
+    }
+
+    function endTouch(evt,did){
+        clearTimeout(touchTimer)
+        touchTimer = null
+    }
+
+    function initDeviceList() {
+        gizWifiSDK.userLogin({
+            "userName": $api.getStorage('phoneNum'),
+            "password": '123456'
+        }, function (ret, err) { //回调uid,和token;
+            if (ret) {
+                $api.setStorage('uid', ret.uid);
+                $api.setStorage('token', ret.token);
+                console.log(JSON.stringify(ret))
+                gizWifiSDK.disableLAN({"disabled": false}, function(ret, err) {
+                    console.log('小循环')
+                });
+                console.log("uid:"+$api.getStorage('uid'))
+                console.log("token:"+$api.getStorage('token'))
+                let uid = $api.getStorage('uid')
+                let token = $api.getStorage('token')
+                console.log(typeof uid)
+                console.log(typeof token)
+                // return
+                gizWifiSDK.getBoundDevices({
+                    "uid": $api.getStorage('uid'),
+                    "token": $api.getStorage('token'),
+                    // "specialProductKeys": [$api.getStorage('gizWifiSDK').produce]
+                }, function (ret, err) {
+                    console.log(JSON.stringify(ret))
+                    api.hideProgress();
+                    if(ret){
+                        api.hideProgress();
+                        var list = document.getElementsByClassName('deviceList')[0]
+                        list.innerHTML = ''
+                        for (var i = 0; i < ret.devices.length; i++) {
+                            var DOM = `
+                            <div ontouchend="endTouch(event,'${ret.devices[i].did}')" ontouchstart="startTouch(event,'${ret.devices[i].did}','${ret.devices[i].mac}')" onclick="oepnDevice('${ret.devices[i].mac}','${ret.devices[i].did}')">
+                                <img src="../image/choiceDevice/logo.png" height="70%" alt="">
+                                &nbsp;&nbsp;<p>${ret.devices[i].mac}</p>
+                            </div>
+                            `
+                            list.innerHTML += DOM
+                        }
+                    }else if(err.errorCode == 9004){
+                        // token过期
+                        openWin('login','./login.html') 
+                    }else if(err.errorCode==8010){
+                        openWin('login','./login.html')
+                    }else{
+                        initDeviceList()
+                    }
+                });
+                
+            }
+        })
+        
+    }
+
+    function closeAPP() {
+        api.addEventListener({
+            name: 'keyback'
+        }, function (ret, err) {
+            if (new Date().getTime() - backTime < 2000 && backTime) {
+                api.closeWidget({
+                    id: 'A6173786321571'
+                });
+            } else {
+                api.toast({
+                    msg: getTranslate('再次按下返回键则退出app'),
+                    duration: 2000,
+                    location: 'bottom'
+                });
+                backTime = new Date().getTime()
+            }
+        });
+    }
+
+    function addDevice() {
+        if (isGizWifiSDKStart) {
+            getWifiSSID()
+        } else {
+            setTimeout(function () {
+                getWifiSSID()
+            }, 2000)
+        }
+    }
+
+    function getWifiSSID() {
+        gizWifiSDK.getPhoneSSID(function (ret, err) {     
+            if(api.systemType == 'ios'){       
+                if(ret){
+                    console.log(JSON.stringify(ret))
+                    if(ret.ssid == '<unknown ssid>'){
+                        api.toast({
+                            msg: getTranslate('请打开【WIFI】'),
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                    }else{
+                        openCreateLink(ret.ssid)
+                    }
+                }else{
+                    api.toast({
+                        msg: getTranslate('请打开【WIFI】'),
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                } 
+            }else if(api.systemType == 'android'){
+                if(ret){
+                    if(ret.SSID == '<unknown ssid>'){
+                        api.toast({
+                            msg: getTranslate('请打开【WIFI】和【位置信息】'),
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                    }else{
+                        
+                        openCreateLink(ret.SSID)
+                    }
+                }else{
+                    api.toast({
+                        msg: getTranslate('请打开【WIFI】和【位置信息】'),
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                } 
+            }
+             
+            
+        });
+    }
+
+    function getWifiSSID_spare() {
+        gizWifiSDK.getPhoneSSID(function (ret, err) {      
+            if(api.systemType == 'ios'){       
+                if(ret){
+                    if(ret.ssid == '<unknown ssid>'){
+                        api.toast({
+                            msg: getTranslate('请打开【WIFI】'),
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                    }else{
+                        api.sendEvent({
+                            name: 'ssid_callback',
+                            extra: {ssid:ret.ssid}
+                        });
+                    }
+                }else{
+                    api.toast({
+                        msg: getTranslate('请打开【WIFI】'),
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                } 
+            }else if(api.systemType == 'android'){
+                if(ret){
+                    if(ret.SSID == '<unknown ssid>'){
+                        api.toast({
+                            msg: getTranslate('请打开【WIFI】和【位置信息】'),
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                    }else{
+                        let ssid = ret.SSID
+                        ssid = ssid.slice(1)
+                        ssid = ssid.substr(0,ssid.length-1)
+                        api.sendEvent({
+                            name: 'ssid_callback',
+                            extra: {ssid:ssid}
+                        });
+                    }
+                }else{
+                    api.toast({
+                        msg: getTranslate('请打开【WIFI】和【位置信息】'),
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                } 
+            }
+             
+            
+        });
+    }
+
+    function setDeviceOnboardingDeploy(ssid,password){
+        gizWifiSDK.setDeviceOnboardingDeploy({
+            // "ssid": ssid,
+            // "key": password,
+            // "mode": 1,
+            // "timeout": 120,
+            // bind:false
+            "ssid": ssid,
+            "key": password,
+            "mode": 1/*GizWifiSoftAP*/,
+            "softAPSSIDPrefix": "XPG-GAgent-",
+            "timeout": 60,
+            "gagentTypes":[4],
+            "bind":false
+        }, function (ret, err) {     
+            if(ret){
+                api.execScript({
+                    name: 'createLink',
+                    script: 'createSuccess()'
+                });
+                api.showProgress({
+                    title: getTranslate('努力加载中') + '...',
+                    text: getTranslate('请稍等') + '...',
+                    modal: true
+                });
+                initDeviceList()
+                bindDevice(ret.device)
+                // oepnDevice(ret.device.mac,ret.device.did)
+            }else{
+                api.execScript({
+                    name: 'createLink',
+                    script: 'createFail()'
+                });
+            }
+        })
+
+        
+    }
+
+    function setDeviceOnboardingDeploy_spare(family_ssid,password,ssid){
+        gizWifiSDK.setDeviceOnboardingDeploy({
+            "ssid": family_ssid,
+            "key": password,
+            "softAPSSIDPrefix":ssid,
+            "mode": 0/*GizWifiSoftAP*/,
+            "timeout": 60,
+            "gagentTypes":[4],
+            "bind":false,
+            "softAPSSIDPrefix": "XPG-GAgent-",
+        }, function (ret, err) {     
+            if(ret){
+                api.execScript({
+                    name: 'createLink_spare',
+                    script: 'createSuccess()'
+                });
+                api.showProgress({
+                    title: getTranslate('努力加载中') + '...',
+                    text: getTranslate('请稍等') + '...',
+                    modal: true
+                });
+                // initDeviceList()
+                // bindDevice(ret.device)
+                oepnDevice(ret.device.mac,ret.device.did)
+            }else{
+                api.execScript({
+                    name: 'createLink_spare',
+                    script: 'createFail()'
+                });
+            }  
+        })
+    }
+    function setDeviceOnboardingDeploy_blue(ssid,password){
+        // gizWifiSDK.setDeviceOnboardingDeploy({
+        //     "ssid": family_ssid,
+        //     "key": password,
+        //     "softAPSSIDPrefix":ssid,
+        //     "mode": 0/*GizWifiSoftAP*/,
+        //     "timeout": 60,
+        //     "gagentTypes":[4],
+        //     "bind":false,
+        //     "softAPSSIDPrefix": "XPG-GAgent",
+        // }, function (ret, err) {     
+        //     if(ret){
+        //         api.execScript({
+        //             name: 'createLink_spare',
+        //             script: 'createSuccess()'
+        //         });
+        //         api.showProgress({
+        //             title: getTranslate('努力加载中') + '...',
+        //             text: getTranslate('请稍等') + '...',
+        //             modal: true
+        //         });
+        //         // initDeviceList()
+        //         // bindDevice(ret.device)
+        //         oepnDevice(ret.device.mac,ret.device.did)
+        //     }else{
+        //         api.execScript({
+        //             name: 'createLink_spare',
+        //             script: 'createFail()'
+        //         });
+        //     }
+            
+        // })
+        let mode = 3
+        gizWifiSDK.setDeviceOnboardingDeploy({
+            "ssid": ssid,
+            "key": password,
+            "mode": mode,
+            "timeout": 60,
+            "types": [4],
+            "bind":false,
+            "softAPSSIDPrefix": "XPG-GAgent-",
+            // "softAPSSIDPrefix": "GIZ-GAgent-",
+        }, function (ret, err) {
+            if(ret){
+                api.execScript({
+                    name: 'creatLink_bluetooth',
+                    script: 'createSuccess()'
+                });
+                api.showProgress({
+                    title: getTranslate('努力加载中') + '...',
+                    text: getTranslate('请稍等') + '...',
+                    modal: true
+                });
+                initDeviceList()
+                bindDevice(ret.device)
+                // oepnDevice(ret.device.mac,ret.device.did)
+            }else{
+                api.execScript({
+                    name: 'creatLink_bluetooth',
+                    script: 'createFail()'
+                });
+            }
+            
+        })
+    }
+
+    function bindDevice(device) {  //设备绑定到云端   
+        api.showProgress({
+            title: getTranslate('努力加载中') + '...',
+            text: getTranslate('请稍等') + '...',
+            modal: true
+        });
+        gizWifiDevice.setSubscribe({
+            "subscribed": true,
+            "device": device,
+            "productSecret":$api.getStorage('gizWifiSDK').serect
+        }, function (ret, err) {
+            var uid = $api.getStorage('uid')
+            var token = $api.getStorage('token')
+            var giz = $api.getStorage('gizWifiSDK')
+            gizWifiSDK.bindRemoteDevice({
+                "uid": uid,
+                "token": token,
+                "mac": device.mac,
+                "productKey": giz.produce,
+                "productSecret": giz.serect
+            }, function (ret, err) {
+                api.hideProgress();
+                if (ret) {
+                    setTimeout(function(){
+                        oepnDevice(device.mac,device.did)
+                    },1000)
+                }
+            });
+        })
+    }
+    
+    function unband(obj){
+        gizWifiSDK.unbindDevice(obj, function (ret, err) {
+            if (ret) {
+                api.rebootApp();
+            }
+        })
+    }
+
+    function openVideo(){
+        api.openWin({
+            name: 'video',
+            url: './'+'video'+'.html',
+            bounces: false
+        });
+    }
+
+    function openTest(){
+        api.openWin({
+            name: 'test',
+            url: './Test.html',
+            bounces: false
+        });
+    }
+</script>
+
+</html>

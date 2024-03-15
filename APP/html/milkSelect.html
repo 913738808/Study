@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>设置选择</title>
+    <link rel="stylesheet" href="../css/api.css">
+    <script src="../script/api.js"></script>
+    <script src="../script/lang.js"></script>
+    <script src="../script/jquery.min.js"></script>
+    <script src="../script/jquery.i18n.min.js"></script>
+    <style>
+         .header {
+            width: 100vw;
+            height: 90px;
+            background: url('../image/createLink/header.png') no-repeat;
+            background-size: 100% 100%;
+            position: relative;
+        }
+
+        #title {
+            position: absolute;
+            text-align: center;
+            width: 100%;
+            margin-top: 4vw;
+            color: #fff;
+        }
+
+        #back {
+            position: absolute;
+            height: 5vw;
+            left: 5vw;
+            margin-top: 4vw;
+        }
+        #toMilkSetting{
+            position: absolute;
+            height: 5vw;
+            right: 5vw;
+            color: #fff;
+            margin-top: 4vw;
+        }
+        .main_list{
+            width: 100%;
+        }
+        .main_list>.item{
+            width: 100%;
+            min-height: 18vw;
+            display: flex;
+            align-items: center;
+            /* background-color: red; */
+            justify-content: space-around;
+        }
+        .select{
+            width: 5vw;
+            height: 5vw;
+            border-radius: 50%;
+            position: relative;
+            border: 2px #ccc solid;
+        }
+        .center{
+            position: absolute;
+            width: 3.5vw;
+            height: 3.5vw;
+            border-radius: 50%;
+            left: 50%;
+            top: 50%;
+            background-color: green;
+            display: none;
+            transform: translate(-50%,-50%);
+        }
+        .info{
+            width: 85vw;
+            min-height: 18vw;
+        }
+        .info_name{
+            width: 100%;
+            min-height: 9vw;
+        }
+        .info_data{
+            width: 100%;
+            min-height: 9vw;
+            display: flex;
+            align-items: center;
+        }
+        .info_data_milkratio{
+            width: 50%;
+            word-wrap: break-word;
+            min-height: 9vw;
+        }
+        .info_data_milktype{
+            width: 50%;
+            min-height: 9vw;
+            word-wrap: break-word;
+            word-break:keep-all;
+        }
+        .btn_box{
+            min-height: 9vw;
+            width: 80%;
+            margin: 10px auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+        }
+        .btn_box>div{
+            width: fit-content;
+            height: fit-content;
+            padding: 3px 12px;
+            border-radius: 3px;
+            color: #ffffff;
+        }
+        .del{
+            background-color: rgb(204, 70, 70);
+        }
+        .change{
+            background-color: rgb(116, 182, 72);
+        }
+        hr{
+            margin: 0 auto;
+            width: 85%;
+            height: 1px;
+            background-color: #EFEEFA;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div id="title" i18n="milkSetting.select">奶粉设置</div>
+        <img id="back" onclick="closeWin()" src="../image/back.png" alt="">
+        <div id="toMilkSetting" onclick="toMilkSetting()" i18n="milkSetting.add">添加</div>
+    </div>
+    <div class="main_list">
+        <div class="item">
+            <div class="select">
+                <div class="center" style="display: block;"></div>
+            </div>
+            <div class="info">
+                <div class="info_name">奶粉名称:aaaa</div>
+                <div class="info_data">
+                    <div class="info_data_milkratio">奶粉段位:1段</div>
+                    <div class="info_data_milktype">奶粉配比:18g/1111111100ml</div>
+                </div>
+                <div class="btn_box">
+                    <div class="del">删除</div>
+                    <div class="change">修改</div>
+                </div>
+            </div>
+        </div>
+        <hr>
+    </div>
+</body>
+</html>
+<script>
+apiready = function(){
+    var title = document.getElementById('title')
+    $api.fixStatusBar(title)
+    var back = document.getElementById('back')
+    $api.fixStatusBar(back)
+    var toMilkSetting = document.getElementById('toMilkSetting')
+    $api.fixStatusBar(toMilkSetting)
+    initList()
+    ChangeLang($api.getStorage('language'))      
+}
+
+function initList(){
+    var milkList = $api.getStorage('milkList');
+    // console.log(JSON.stringify(milkList))
+
+    var milktype = $api.getStorage('milktype')
+    var milkname = $api.getStorage('milkname')
+    var milkratio = $api.getStorage('milkratio')
+    var milkItem = {
+        "milktype":milktype,
+        "milkname":milkname,
+        "milkratio":milkratio
+    }
+
+    var main_list = document.getElementsByClassName('main_list')[0]
+    main_list.innerHTML = ''
+    if(milkList){
+        for(var i=0;i<milkList.length;i++){
+            var item = document.createElement('div')
+            item.className = 'item'
+            var select = document.createElement('div')
+            select.className = 'select'
+            var center = document.createElement('div')
+            center.className = 'center'
+            var info = document.createElement('div')
+            info.className = 'info' 
+            var info_name = document.createElement('div')
+            info_name.className = 'info_name' 
+            var info_data = document.createElement('div')
+            info_data.className = 'info_data' 
+            var info_data_milkratio = document.createElement('div')
+            info_data_milkratio.className = 'info_data_milkratio' 
+            var info_data_milktype = document.createElement('div')
+            info_data_milktype.className = 'info_data_milktype' 
+            
+            var btn_box = document.createElement('div')
+            btn_box.className = 'btn_box' 
+            var del = document.createElement('div')
+            del.className = 'del' 
+            del.innerHTML = getTranslate('删除')
+            var change = document.createElement('div')
+            change.className = 'change' 
+            change.innerHTML = getTranslate('修改')
+
+            btn_box.appendChild(del)
+            btn_box.appendChild(change);
+
+            (function(x,element){
+                element.addEventListener('click',function(e){
+                    window.event? window.event.cancelBubble = true : e.stopPropagation();
+                    var a = milkList.splice(x, 1);
+                    $api.setStorage('milkList', milkList);
+                    initList()
+                },false)
+            })(i,del);
+
+            (function(x,element){
+                element.addEventListener('click',function(e){
+                    window.event? window.event.cancelBubble = true : e.stopPropagation();
+                    api.openWin({
+                        name: 'milkSetting',
+                        url: './milkSetting.html',
+                        bounces: false,
+                        pageParam: {index : x}
+                    });
+                },false)
+            })(i,change)
+
+            info_data_milktype.innerHTML = getTranslate("奶粉配比")+milkList[i].milkratio.milk+"g/100ml"
+            info_data_milkratio.innerHTML = getTranslate("奶粉段位")+milkList[i].milktype+getTranslate("段")
+            info_name.innerHTML = getTranslate("奶粉名称") + milkList[i].milkname
+            
+            milkList[i].milktype = parseInt(milkList[i].milktype)
+            
+            info_data.appendChild(info_data_milkratio)
+            info_data.appendChild(info_data_milktype)
+
+            info.appendChild(info_name)
+            info.appendChild(info_data)
+            info.appendChild(btn_box)
+
+            select.appendChild(center)
+            item.appendChild(select)
+            item.appendChild(info)
+            main_list.appendChild(item);
+            (function(x,e){
+                e.addEventListener('click',function(){
+                    $api.setStorage('milktype', milkList[x].milktype)
+                    $api.setStorage('milkname', milkList[x].milkname)
+                    $api.setStorage('milkratio', milkList[x].milkratio)
+                    api.execScript({
+                        name: 'Group',
+                        frameName: 'main',
+                        script: 'setMilkName()'
+                    });
+                    api.closeWin();
+                },false)
+            })(i,item)
+            
+            if(milkList[i].milktype==milkItem.milktype&&milkList[i].milkname==milkItem.milkname&&JSON.stringify(milkList[i].milkratio)==JSON.stringify(milkItem.milkratio)){
+                center.style.display = 'block'
+            }
+            if(i!=milkList.length-1){
+                var hr = document.createElement('hr')
+                main_list.appendChild(hr)
+            }
+        }
+        
+    }else{
+        milkList = []
+        $api.setStorage('milkList', milkList);
+    }
+}
+
+function closeWin(){
+    api.closeWin({});
+}
+function toMilkSetting(){
+    api.openWin({
+        name: 'milkSetting',
+        url: './milkSetting.html',
+    });
+}
+</script>

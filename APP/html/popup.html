@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+        content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>popup</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            background-color: rgba(0, 0, 0, 0);
+            position: relative;
+        }
+        .toastBG{
+            position: absolute;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.4);
+            overflow: hidden;
+            display: none;
+            display: block;
+        }
+        .popupBox{
+            position: absolute;
+            width: 130px;
+            right: 38px;
+            top: 38px;
+        }
+        .btnList{
+            background-color: #fff;
+            width: 100%;
+            max-height: 600px;
+            overflow: scroll;
+            border-radius: 3px;
+            display: flex;
+            flex-direction: column;
+            /* justify-content: space-around; */
+            /* padding-top: 15px; */
+            
+        }
+        .btn{
+            height: 40px;
+            margin: 0 auto;            
+            width: 60%;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+        }
+        .btn>img{
+            height: 50%;
+        }
+        .hr{
+            width: 70%;
+            margin: 0 auto;
+            height: 1px;
+            background-color: #ccc;
+        }
+        .selected{
+            background-color: rgb(230, 230, 230);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="toastBG" id="toastBG" onclick="hideToast(event)">
+        
+    </div>
+    <div class="popupBox">
+        <!-- <div class="btnList" id="version2">
+            <div class="btn" onclick="changeTemp('8')">
+                <img src="../image/main/midle.png" height="50%" alt="" srcset="">
+                <p>45℃</p>                    
+            </div>       
+            <div class="hr"></div>
+            <div class="btn" onclick="changeTemp('9')">
+                <img src="../image/main/midle.png" height="50%" alt="" srcset="">
+                <p>46℃</p>
+            </div>      
+            <div class="hr"></div>
+            <div class="btn" onclick="changeTemp('10')">
+                <img src="../image/main/high.png" height="50%" alt="" srcset="">
+                <p>47℃</p>
+            </div>      
+            <div class="hr"></div>
+            <div class="btn" onclick="changeTemp('11')">
+                <img src="../image/main/high.png" height="50%" alt="" srcset="">
+                <p>48℃</p>
+            </div>      
+            <div class="hr"></div>
+            <div class="btn" onclick="changeTemp('12')">
+                <img src="../image/main/high.png" height="50%" alt="" srcset="">
+                <p>49℃</p>
+            </div>      
+            <div class="hr"></div>
+            <div class="btn" onclick="changeTemp('13')">
+                <img src="../image/main/high.png" height="50%" alt="" srcset="">
+                <p>50℃</p>
+            </div>
+
+            <div class="btn" onclick="changeTemp('14')">
+                <img src="../image/main/high.png" height="50%" alt="" srcset="">
+                <p>51℃</p>                    
+            </div>
+            <div class="hr"></div>
+            <div class="btn" onclick="changeTemp('15')">
+                <img src="../image/main/high.png" height="50%" alt="" srcset="">
+                <p>52℃</p>                    
+            </div>
+            <div class="hr"></div>
+            <div class="btn" onclick="changeTemp('16')">
+                <img src="../image/main/high.png" height="50%" alt="" srcset="">
+                <p>53℃</p>                    
+            </div>
+            <div class="hr"></div>
+            <div class="btn" onclick="changeTemp('17')">
+                <img src="../image/main/high.png" height="50%" alt="" srcset="">
+                <p>54℃</p>                    
+            </div>
+            <div class="hr"></div>
+            <div class="btn" onclick="changeTemp('18')">
+                <img src="../image/main/high.png" height="50%" alt="" srcset="">
+                <p>55℃</p>                    
+            </div>
+            <div class="hr"></div>
+            <div class="btn" onclick="changeTemp('19')">
+                <img src="../image/main/high.png" height="50%" alt="" srcset="">
+                <p>60℃</p>                    
+            </div>
+            <div class="hr"></div>
+            <div class="btn" onclick="changeTemp('20')">
+                <img src="../image/main/high.png" height="50%" alt="" srcset="">
+                <p>70℃</p>                    
+            </div>
+        </div> -->
+        <div class="btnList" id="btnList">
+
+        </div>
+        <!-- <div class="btnList" id="version1">
+            <div class="btn" onclick="changeTemp('3')">
+                <img src="../image/main/low.png" height="50%" alt="" srcset="">
+                <p>40℃</p>                    
+            </div>
+            <div class="hr"></div>
+            <div class="btn" onclick="changeTemp('4')">
+                <img src="../image/main/low.png" height="50%" alt="" srcset="">
+                <p>41℃</p>                    
+            </div>
+            <div class="hr"></div>
+            <div class="btn" onclick="changeTemp('5')">
+                <img src="../image/main/low.png" height="50%" alt="" srcset="">
+                <p>42℃</p>                    
+            </div>
+            <div class="hr"></div>
+            <div class="btn" onclick="changeTemp('6')">
+                <img src="../image/main/midle.png" height="50%" alt="" srcset="">
+                <p>43℃</p>                    
+            </div>
+            <div class="hr"></div>
+            <div class="btn" onclick="changeTemp('7')">
+                <img src="../image/main/midle.png" height="50%" alt="" srcset="">
+                <p>44℃</p>                    
+            </div>       
+            <div class="hr"></div>
+            <div class="btn" onclick="changeTemp('8')">
+                <img src="../image/main/midle.png" height="50%" alt="" srcset="">
+                <p>45℃</p>                    
+            </div>       
+            <div class="hr"></div>
+            <div class="btn" onclick="changeTemp('9')">
+                <img src="../image/main/midle.png" height="50%" alt="" srcset="">
+                <p>46℃</p>
+            </div>      
+            <div class="hr"></div>
+            <div class="btn" onclick="changeTemp('10')">
+                <img src="../image/main/high.png" height="50%" alt="" srcset="">
+                <p>47℃</p>
+            </div>      
+            <div class="hr"></div>
+            <div class="btn" onclick="changeTemp('11')">
+                <img src="../image/main/high.png" height="50%" alt="" srcset="">
+                <p>48℃</p>
+            </div>      
+            <div class="hr"></div>
+            <div class="btn" onclick="changeTemp('12')">
+                <img src="../image/main/high.png" height="50%" alt="" srcset="">
+                <p>49℃</p>
+            </div>      
+            <div class="hr"></div>
+            <div class="btn" onclick="changeTemp('13')">
+                <img src="../image/main/high.png" height="50%" alt="" srcset="">
+                <p>50℃</p>
+            </div>
+
+            <div class="btn" onclick="changeTemp('14')">
+                <img src="../image/main/high.png" height="50%" alt="" srcset="">
+                <p>51℃</p>                    
+            </div>
+            <div class="hr"></div>
+            <div class="btn" onclick="changeTemp('15')">
+                <img src="../image/main/high.png" height="50%" alt="" srcset="">
+                <p>52℃</p>                    
+            </div>
+            <div class="hr"></div>
+            <div class="btn" onclick="changeTemp('16')">
+                <img src="../image/main/high.png" height="50%" alt="" srcset="">
+                <p>53℃</p>                    
+            </div>
+            <div class="hr"></div>
+            <div class="btn" onclick="changeTemp('17')">
+                <img src="../image/main/high.png" height="50%" alt="" srcset="">
+                <p>54℃</p>                    
+            </div>
+            <div class="hr"></div>
+            <div class="btn" onclick="changeTemp('18')">
+                <img src="../image/main/high.png" height="50%" alt="" srcset="">
+                <p>55℃</p>                    
+            </div>
+            <div class="hr"></div>
+            <div class="btn" onclick="changeTemp('19')">
+                <img src="../image/main/high.png" height="50%" alt="" srcset="">
+                <p>56℃</p>                    
+            </div>
+            <div class="hr"></div>
+            <div class="btn" onclick="changeTemp('20')">
+                <img src="../image/main/high.png" height="50%" alt="" srcset="">
+                <p>57℃</p>                    
+            </div>
+            <div class="hr"></div>
+            <div class="btn" onclick="changeTemp('21')">
+                <img src="../image/main/high.png" height="50%" alt="" srcset="">
+                <p>58℃</p>                    
+            </div>
+            <div class="hr"></div>
+            <div class="btn" onclick="changeTemp('22')">
+                <img src="../image/main/high.png" height="50%" alt="" srcset="">
+                <p>59℃</p>                    
+            </div>
+            <div class="hr"></div>
+            <div class="btn" onclick="changeTemp('23')">
+                <img src="../image/main/high.png" height="50%" alt="" srcset="">
+                <p>60℃</p>                    
+            </div>
+        </div> -->
+    </div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script>
+    apiready = function () {
+        var popupBox = document.getElementsByClassName('popupBox')[0];
+        $api.fixStatusBar(popupBox)
+        // 先隐藏 初始化这个frame 是在打开Group页面的时候  这时候还没有提示需要弹出
+        document.getElementsByTagName('body')[0].style.display = 'none'
+    };
+    // window.onload = ()=>{
+    //     show(1)
+    // }
+    function hideToast(e){
+        e.stopPropagation();
+        api.sendFrameToBack({
+            from: 'popup',
+        });
+        document.getElementsByTagName('body')[0].style.display = 'none'
+    }
+    function changeTemp(index){
+        api.execScript({
+            name: 'Group',
+            frameName: 'main',
+            script: 'changeTemp('+index+')'
+        });
+    }
+    var data = {
+        version1:[
+        {
+            temp:40,
+            cmd:3
+        },{
+            temp:41,
+            cmd:4
+        },{
+            temp:42,
+            cmd:0
+        },{
+            temp:43,
+            cmd:6
+        },{
+            temp:44,
+            cmd:1
+        },{
+            temp:45,
+            cmd:8
+        },{
+            temp:46,
+            cmd:2
+        },{
+            temp:47,
+            cmd:10
+        },{
+            temp:48,
+            cmd:11
+        },{
+            temp:49,
+            cmd:12
+        },{
+            temp:50,
+            cmd:13
+        },{
+            temp:51,
+            cmd:14
+        },{
+            temp:52,
+            cmd:15
+        },{
+            temp:53,
+            cmd:16
+        },{
+            temp:54,
+            cmd:17
+        },{
+            temp:55,
+            cmd:18
+        }],
+        version2:[{
+            temp:45,
+            cmd:8
+        },{
+            temp:46,
+            cmd:9
+        },{
+            temp:47,
+            cmd:10
+        },{
+            temp:48,
+            cmd:11
+        },{
+            temp:49,
+            cmd:12
+        },{
+            temp:50,
+            cmd:13
+        },{
+            temp:51,
+            cmd:14
+        },{
+            temp:52,
+            cmd:15
+        },{
+            temp:53,
+            cmd:16
+        },{
+            temp:54,
+            cmd:17
+        },{
+            temp:55,
+            cmd:18
+        },{
+            temp:60,
+            cmd:19
+        },{
+            temp:70,
+            cmd:20
+        }],
+        version3:[
+            {
+                temp:37,
+                cmd:0
+            },{
+                temp:38,
+                cmd:1
+            },{
+                temp:39,
+                cmd:2
+            },{
+                temp:40,
+                cmd:3
+            },{
+                temp:41,
+                cmd:4
+            },{
+                temp:42,
+                cmd:5
+            },{
+                temp:43,
+                cmd:6
+            },{
+                temp:44,
+                cmd:7
+            },{
+                temp:45,
+                cmd:8
+            },{
+                temp:46,
+                cmd:9
+            },{
+                temp:47,
+                cmd:10
+            },{
+                temp:48,
+                cmd:11
+            },{
+                temp:49,
+                cmd:12
+            },{
+                temp:50,
+                cmd:13
+            },{
+                temp:51,
+                cmd:14
+            },{
+                temp:52,
+                cmd:15
+            },{
+                temp:53,
+                cmd:16
+            },{
+                temp:54,
+                cmd:17
+            },{
+                temp:55,
+                cmd:18
+            },{
+                temp:60,
+                cmd:19
+            },{
+                temp:70,
+                cmd:20
+            }
+        ]
+    }
+    function show(version){
+        var TempLevel = $api.getStorage('TempLevel');
+        var btnList = document.getElementById("btnList")
+        btnList.innerHTML = ""
+        // version = 2
+        if(version == 1){
+            data.version1.forEach((el,index) => {
+                let div = document.createElement("div")
+                $api.addCls(div, 'btn');
+                let p = document.createElement("p")
+                p.innerHTML = el.temp+"℃"
+                let img = new Image()
+                if(el.temp <= 45){
+                    img.src = "../image/main/low.png"
+                }else if(el.temp > 45 && el.temp <= 50){
+                    img.src = "../image/main/midle.png"
+                }else{
+                    img.src = "../image/main/high.png"
+                }
+                if(TempLevel == el.cmd){
+                    $api.addCls(div, 'selected');
+                }
+                div.onclick = function(){
+                    console.log(`发送命令码:${el.cmd}`)
+                    changeTemp(el.cmd)
+                    let bArray = document.getElementsByClassName('btn')
+                    bArray = [...bArray]
+                    bArray.forEach((_el,_i)=>{
+                        if(_i == index){
+                            $api.addCls(_el, 'selected');
+                        }else{
+                            $api.removeCls(_el, 'selected');
+                        }
+                    })
+
+                }
+                div.appendChild(img)
+                div.appendChild(p)
+                btnList.appendChild(div)
+            });
+        }else if(version == 2){
+            data.version2.forEach((el,index) => {
+                let div = document.createElement("div")
+                $api.addCls(div, 'btn');
+                let p = document.createElement("p")
+                p.innerHTML = el.temp+"℃"
+                let img = new Image()
+                if(el.temp <= 45){
+                    img.src = "../image/main/low.png"
+                }else if(el.temp > 45 && el.temp <= 50){
+                    img.src = "../image/main/midle.png"
+                }else{
+                    img.src = "../image/main/high.png"
+                }
+                if(TempLevel == el.cmd){
+                    $api.addCls(div, 'selected');
+                }
+                div.onclick = function(){
+                    changeTemp(el.cmd)
+                    let bArray = document.getElementsByClassName('btn')
+                    bArray = [...bArray]
+                    bArray.forEach((_el,_i)=>{
+                        if(_i == index){
+                            $api.addCls(_el, 'selected');
+                        }else{
+                            $api.removeCls(_el, 'selected');
+                        }
+                    })
+                }
+                div.appendChild(img)
+                div.appendChild(p)
+                btnList.appendChild(div)
+            });
+        }else if(version == 3){
+            data.version3.forEach((el,index) => {
+                let div = document.createElement("div")
+                $api.addCls(div, 'btn');
+                let p = document.createElement("p")
+                p.innerHTML = el.temp+"℃"
+                let img = new Image()
+                if(el.temp <= 45){
+                    img.src = "../image/main/low.png"
+                }else if(el.temp > 45 && el.temp <= 50){
+                    img.src = "../image/main/midle.png"
+                }else{
+                    img.src = "../image/main/high.png"
+                }
+                if(TempLevel == el.cmd){
+                    $api.addCls(div, 'selected');
+                }
+                div.onclick = function(){
+                    changeTemp(el.cmd)
+                    let bArray = document.getElementsByClassName('btn')
+                    bArray = [...bArray]
+                    bArray.forEach((_el,_i)=>{
+                        if(_i == index){
+                            $api.addCls(_el, 'selected');
+                        }else{
+                            $api.removeCls(_el, 'selected');
+                        }
+                    })
+                }
+                div.appendChild(img)
+                div.appendChild(p)
+                btnList.appendChild(div)
+            });
+        }
+        document.getElementsByTagName('body')[0].style.display = 'block'
+    }
+</script>
+
+</html>

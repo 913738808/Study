@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+        content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>navBar</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+
+<body>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script>
+    apiready = function () {
+        api.addEventListener({
+            name: 'keyback'
+        }, function(ret, err) {})
+        // 这个frame一点用处都没有~~~但是不能被删除 删除之后在ios端就会出现问题 就问你气不气~~
+        api.openFrame({
+            name: 'importance',
+            url: './importance.html',
+            rect: {
+                x: 0,
+                y: 0,
+                w: 'auto',
+                h: 'auto'
+            }
+        });
+        // 预先打开toast 防止等下报错
+        api.openFrame({
+            name: 'toast',
+            url: './toast.html',
+            rect: {
+                x: 0,
+                y: 0,
+                w: 'auto',
+                h: 'auto'
+            }
+        });
+        
+        api.openFrame({
+            name: 'popup',
+            url: './popup.html',
+            rect: {
+                x: 0,
+                y: 0,
+                w: 'auto',
+                h: 'auto'
+            }
+        });
+        let navH = 100
+        if(api.systemType=='ios'){
+            navH = 100*(0.8)
+        }
+        api.openFrameGroup({
+            name: 'group',
+            rect: {
+                x: 0,
+                y: 0,
+                w: 'auto',
+                h: api.winHeight-navH*0.44
+            },
+            frames: [{
+                name: 'main',
+                url: './main.html',
+                bgColor: '#fff'
+            }, {
+                name: 'baby',
+                url: './baby.html',
+                bgColor: '#fff'
+            }],
+            scrollEnabled:false
+        }, function (ret, err) {
+            var index = ret.index;
+        });
+        
+        api.openFrame({
+            name: 'nav',
+            url: './nav.html',
+            bounces: false,
+            rect: {
+                x: 0,
+                y: api.winHeight - navH,
+                w: 'auto',
+                h: navH
+            }
+        });
+    };
+
+</script>
+
+</html>

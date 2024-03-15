@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>navBar</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: rgba(255, 255, 255, 0);
+            /* background-color: red; */
+        }
+        .navBar{
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+        .navBar>img{
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+        .btn{
+            width: 100vw;
+            height: 100vh;
+            position: absolute;
+            bottom: 0px;
+            left: 0px;
+            z-index: 200;
+            display: flex;
+            justify-content: space-between;
+        }
+        #divmain{
+            margin-left: 30px;
+            /* margin-top: 10px; */
+            display: flex;
+            height: 100%;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            /* height: 100%;
+            background-color: red; */
+        }
+        #divbaby{
+            margin-right: 30px;
+            /* margin-top: 10px; */
+            display: flex;
+            height: 100%;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .btn>div>p{
+            text-align: center;
+            color: #fff;
+            font-size: 11px;
+            margin-top: 4px;
+            font-family: pf1;
+        }
+    </style>
+</head>
+<body>
+    <div class="navBar">
+        <img src="../image/navBar.png" alt="" srcset="">
+        <div class="btn">
+            <div id="divmain">
+                <img id="btnmain" src="../image/btnmain.png" onclick="show('main')" width="40px" alt="" srcset="">
+                <p id="textMain">冲奶</p>
+            </div>
+            <div id="divbaby">
+                <img id="btnbaby" src="../image/btnbaby-1.png" onclick="show('baby')" width="40px" alt="" srcset="">
+                <p id="textBaby">宝宝</p>
+            </div>
+        </div>
+    </div>
+    
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script src="../script/move.min.js"></script>
+<script src="../script/lang.js"></script>
+<script>
+    apiready = function() {
+        changeTextColor(0)
+        document.getElementById('textMain').innerHTML = getTranslate('冲奶')
+        document.getElementById('textBaby').innerHTML = getTranslate('宝宝')
+        
+    };
+    var nowShow = 'main'
+    function show(index){
+        if(index!=nowShow){
+            nowShow = index
+            openFrame(nowShow)
+            move('#btn'+index).set('transform','rotateY(180deg)').duration("0.3S").end(
+                function(){
+                    document.getElementById('btn'+index).src = '../image/btn'+index+'.png'
+                    index=='main'?changeTextColor(0):changeTextColor(1)
+                    move('#btn'+index).set('transform','rotateY(360deg)').duration("0.3S").end(function(){
+                        var x = nowShow=='main'?'baby':'main'
+                        document.getElementById('btn'+x).src = '../image/btn'+x+'-1.png'
+                    })
+                }
+            );
+        }
+    }
+    function openFrame(index){
+        index = index=='main'?0:1
+        api.setFrameGroupIndex({
+            name: 'group',
+            index: index,
+            scroll:true
+        });
+        if(index == 1){
+            api.execScript({
+                frameName: 'baby',
+                script: 'reset()'
+            });
+
+        }
+    }
+
+    function changeTextColor(index){
+        var main = document.getElementById('textMain')
+        var baby = document.getElementById('textBaby')
+        var arr = [main,baby]
+        for(var i=0;i<arr.length;i++){
+            if(i==index){
+                arr[i].style.color = '#E04D57'
+            }else{
+                arr[i].style.color = '#FFFFFF'                
+            }
+        } 
+    }
+</script>
+</html>

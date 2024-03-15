@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+        content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>login</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/toast.css" />
+    <style>
+        html,
+        body {
+            /* height: 100%; */
+            position: relative;
+            overflow: scroll;
+            background: url('../image/login/bg.png') no-repeat;
+            background-size: 100% 100%;
+        }
+
+        .main {
+            width: 80vw;
+            height: 45%;
+            background-color: rgba(255, 255, 255, 0.68);
+            border-radius: 20px;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-around;
+        }
+
+        input {
+            width: 100%;
+            height: 60px;
+            line-height: 60px;
+            font-size: 14px;
+            color: #707070;
+        }
+
+        .main>div {
+            width: 90%;
+        }
+
+        .main>div>.input {
+            height: 60px;
+            width: 100%;
+            border-bottom: 1px solid #c7c0ee;
+        }
+
+        .main>.button {
+            height: 40px;
+            width: 80%;
+            background-color: #E04D57;
+            text-align: center;
+            line-height: 40px;
+            border-radius: 20px;
+            color: #fff;
+            font-size: 16px;
+            font-family: pf1;
+        }
+
+        .input_phone {
+            display: grid;
+            grid-template-columns: 24% 76%;
+        }
+
+        .input_code {
+            display: grid;
+            grid-template-columns: 24% 38% 38%;
+        }
+
+        .input_title {
+            line-height: 60px;
+            color: #E25760;
+            font-size: 15px;
+            font-family: pf1;
+        }
+
+        /* 按钮无法点击样式 */
+        .send_messageON {
+            width: 100%;
+            height: 30px;
+            background-color: #c4c4c4;
+            text-align: center;
+            line-height: 30px;
+            margin: auto 0;
+            border-radius: 20px;
+            color: #fff;
+            font-size: 13px;
+            font-family: pf1;
+        }
+
+        /* 按钮可点击样式 */
+        .send_messageOFF {
+            width: 100%;
+            height: 30px;
+            background-color: #E04D57;
+            text-align: center;
+            line-height: 30px;
+            margin: auto 0;
+            border-radius: 20px;
+            color: #fff;
+            font-size: 13px;
+            font-family: pf1;
+        }
+        .setLang{
+            position: absolute;
+            top: 30px;
+            right: 10px;
+            color: #ffffff;
+        }
+        .triangle-down {
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-top: 10px solid #E04D57;
+            position: absolute;
+            right: 20%;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        .Privacy{
+            position: absolute;
+            color: #707070;
+            bottom: 30px;
+            white-space:nowrap;
+            left: 50%;
+            font-size: 0.8rem;
+            transform: translateX(-50%);
+        }
+        .Privacy > span{
+            color: #E04D57;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="main">
+        <!-- <img src="../image/login/logo.png" width="50%" alt=""> -->
+        <div>
+            <div class="input input_phone" onclick="selectCode()" style="position: relative;">
+                <div class="input_title AreaCode" i18n="login.AreaCode" style="white-space:nowrap;">
+                    &nbsp;区号                    
+                </div>
+                
+                <div>
+                    <input type="text" id="AreaCode" value="+86" readonly="readonly">
+                </div>
+                <div class="triangle-down"></div>
+            </div>
+
+            <div class="input input_phone">
+                <div class="input_title phone" i18n="login.phone" style="white-space:nowrap;">
+                    &nbsp;手机
+                </div>
+                <div>
+                    <input type="text" id="PhoneNumber" placeholder="输入手机号">
+                </div>
+            </div>
+            <div class="input input_code">
+                <div class="input_title code" i18n="login.code" style="white-space:nowrap;">
+                    &nbsp;验证码
+                </div>
+                <div>
+                    <input id="code" type="number" oninput="if(value.length>6) value=value.slice(0,6)"
+                        placeholder="输入验证码">
+                </div>
+                <div class="send_messageOFF" onclick="getCode()" id="getCode" i18n="login.getCode">
+                    获取验证码
+                </div>
+            </div>
+        </div>
+        <div class="button" i18n="login.login" onclick="login()">
+            登录
+        </div>
+    </div>
+    <div class="setLang" onclick="choiceLang()">中/English/한국어</div>
+
+    <div class="Privacy">
+        <span onclick="openPrivacy()" class="Privacy2">隐私政策</span> 
+    </div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script src="../script/toast.js"></script>
+<script src="../script/jquery.min.js"></script>
+<script src="../script/jquery.i18n.min.js"></script>
+<script src="../script/lang.js"></script>
+
+<script src="../script/public.js"></script>
+<script src="../script/code.js"></script>
+
+<script>
+    var gizWifiSDK = null
+    var isGizWifiSDKStart = false
+    var token = null
+    var backTime = null
+    var UIActionSelector = null
+    apiready = function () {
+        // $api.clearStorage();
+        // 防止键盘弹出时界面变形
+        document.getElementsByTagName('body')[0].style.height = api.winHeight + 'px'
+        UIActionSelector = api.require('UIActionSelector');
+        gizWifiSDK = api.require('GizWifiSDK_Feisi');
+        document.getElementById('PhoneNumber').placeholder = getTranslate('输入手机号')
+        document.getElementById('code').placeholder = getTranslate('输入验证码')
+        document.getElementsByClassName('button')[0].innerHTML = getTranslate('登陆')
+        document.getElementsByClassName('send_messageOFF')[0].innerHTML = getTranslate('获取验证码')
+        document.getElementsByClassName('AreaCode')[0].innerHTML = getTranslate('区号')
+        document.getElementsByClassName('code')[0].innerHTML = getTranslate('验证码')
+        document.getElementsByClassName('phone')[0].innerHTML = getTranslate('手机')
+        document.getElementsByClassName('Privacy2')[0].innerHTML = getTranslate('隐私政策')
+        var setLang = document.getElementsByClassName('setLang')[0];
+        $api.fixStatusBar(setLang)
+        startWithAppInfo()
+
+        closeAPP()
+        ChangeLang($api.getStorage('language'))
+
+        if(!$api.getStorage('policy')){
+            openPrivacy()
+        }
+
+        // 初始化toast控件 使用此控件必须引入toast.js 和 toast.css
+        initToast()
+    };
+
+    // 登录按钮执行的方法
+    function login() {
+        var code = document.getElementById('code').value
+        var PhoneNumber = document.getElementById('PhoneNumber').value
+        if(PhoneNumber == "123456"&&code=="1234"){
+            // 测试账号
+            $api.setStorage('admin', true)
+            openWin('choiceDevice','./choiceDevice.html')   
+            return false;
+        }
+
+        var AreaCode = document.getElementById('AreaCode').value
+        if(AreaCode!='+86'){
+            PhoneNumber = AreaCode+PhoneNumber
+        }
+
+        // if (PhoneNumber.length < 11) {
+        //     openToast([{
+        //         text: getTranslate('手机号长度必须为11位')
+        //     }])
+        //     return
+        // }
+        if (code == '') {
+            openToast([{
+                text: getTranslate('请输入验证码')
+            }])
+            return
+        }
+        // 判断是否发送了验证码
+        if (token && isGizWifiSDKStart) {
+            gizWifiSDK.registerUser({
+                "userName": PhoneNumber,
+                "password": '123456',
+                "verifyCode": code,
+                "accountType": 1
+            }, function (ret, err) {
+                console.log('注册----'+JSON.stringify(err))
+                // 验证成功
+                if (ret) {
+                    // 注册成功 执行登录
+                    gizWifiSDK.userLogin({
+                        "userName": PhoneNumber,
+                        "password": '123456'
+                    }, function(ret, err) {
+                        $api.setStorage('uid', ret.uid);
+                        $api.setStorage('token', ret.token);
+                        $api.setStorage('phoneNum', PhoneNumber);
+                        openWin('choiceDevice','./choiceDevice.html')              
+                    })
+                } else {
+                    // 该手机号已经被注册
+                    if(err.errorCode == '9018'){
+                        gizWifiSDK.userLogin({
+                            "userName": PhoneNumber,
+                            "password": '123456'
+                        }, function (ret, err) { //回调uid,和token;  
+                            if (ret) {
+                                $api.setStorage('uid', ret.uid);
+                                $api.setStorage('token', ret.token);
+                                $api.setStorage('phoneNum', PhoneNumber);
+                                openWin('choiceDevice','./choiceDevice.html')
+                            }
+                        })
+                    }
+                    // 验证码无效
+                    if (err.errorCode == 9010) {
+                        api.toast({
+                            msg: getTranslate('验证码无效'),
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                    }
+                    // 验证码已过期                
+                    if (err.errorCode == 9009) {
+                        api.toast({
+                            msg: getTranslate('验证码已过期'),
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                    }
+                }
+            });
+        } else {
+            api.toast({
+                msg: getTranslate('请先获取验证码'),
+                duration: 2000,
+                location: 'bottom'
+            });
+            return
+        }
+        // openWin('choiceDevice', './choiceDevice.html')
+    }
+
+    // 获取验证码按钮执行的方法
+    var getCodeTimer = null
+    var Time = 60
+
+    function getCode() {
+        var getCode = document.getElementById('getCode')
+        // 判断当前按钮是否能点击
+        var PhoneNumber = document.getElementById('PhoneNumber').value
+        var AreaCode = document.getElementById('AreaCode').value
+        if(AreaCode!='+86'){
+            PhoneNumber = AreaCode+PhoneNumber
+        }
+        console.log(PhoneNumber)
+        if (Time == 60) {
+            // if (PhoneNumber.length < 11) {
+            //     openToast([{
+            //         text: getTranslate('手机号长度必须为11位')
+            //     }])
+            // } else {
+                if (!getCodeTimer) { //为了防止多次点击 这里加了一次判断
+                    // 暂时假设这里成功获取了验证码 开启定时器
+                    if ($api.hasCls(getCode, 'send_messageOFF')) {
+                        $api.addCls(getCode, 'send_messageON');
+                        $api.removeCls(getCode, 'send_messageOFF');
+                        getCode.innerHTML = Time + 's' + getTranslate('后重试')
+                    }
+                    getCodeTimer = setInterval(function () {
+                        Time--
+                        getCode.innerHTML = Time + 's' + getTranslate('后重试')
+                        if (Time == 0) {
+                            clearInterval(getCodeTimer)
+                            getCodeTimer = null
+                            Time = 60
+                            if ($api.hasCls(getCode, 'send_messageON')) {
+                                $api.addCls(getCode, 'send_messageOFF');
+                                $api.removeCls(getCode, 'send_messageON');
+                                getCode.innerHTML = getTranslate('获取验证码')
+                            }
+                        }
+                    }, 1000)
+                    console.log($api.getStorage('gizWifiSDK').appSerect)
+                    // 执行机智云方法前需检查机智云模块是否启动
+                    console.log(isGizWifiSDKStart)
+                    if (isGizWifiSDKStart) {
+                        gizWifiSDK.requestSendVerifyCode({ //获取验证码 
+                            "appSecret": $api.getStorage('gizWifiSDK').appSerect,
+                            "phone": PhoneNumber
+                            // "phone": "+817015722775"
+                        }, function (ret, err) {
+                            console.log(JSON.stringify(ret))
+                            console.log(JSON.stringify(err))
+                            if(api.systemType=="android"){
+                                console.log(JSON.stringify(ret))
+                                if (ret.errorCode == 0) {
+                                    token = ret.token
+                                    api.toast({
+                                        msg: getTranslate('验证码发送成功'),
+                                        duration: 2000,
+                                        location: 'bottom'
+                                    });
+                                } else {
+                                    api.toast({
+                                        msg: getTranslate('验证码获取失败'),
+                                        duration: 2000,
+                                        location: 'bottom'
+                                    });
+                                }
+                            }
+                            if(api.systemType=="ios"){
+                                if(err){
+                                    api.toast({
+                                        msg: getTranslate('验证码获取失败'),
+                                        duration: 2000,
+                                        location: 'bottom'
+                                    });
+                                }else{
+                                    token = ret.token
+                                    api.toast({
+                                        msg: getTranslate('验证码发送成功'),
+                                        duration: 2000,
+                                        location: 'bottom'
+                                    });
+                                }
+                            }                       
+                            
+                        });
+                    }
+                }
+            // }
+
+        } else {
+            openToast([{
+                text: getTranslate('暂时无法获取验证码')
+            }])
+        }
+    }
+
+    
+function closeAPP(){
+    api.addEventListener({
+        name: 'keyback'
+    }, function(ret, err) {
+
+        if(new Date().getTime()-backTime<2000&&backTime){
+            api.closeWidget({
+                id: 'A6173786321571'
+            });
+        }else{
+            api.toast({
+                msg: getTranslate('再次按下返回键则退出app'),
+                duration: 2000,
+                location: 'bottom'
+            });
+            backTime = new Date().getTime()
+        }
+    });
+}
+
+function openPrivacy(){
+    api.openFrame({
+        name: 'Privacy',
+        url: './Privacy.html',
+        bounces: false,
+        rect: {
+            x: api.winWidth*0.05,
+            y: api.winHeight*0.2,
+            w: api.winWidth*0.9,
+            h: api.winHeight*0.6
+        }
+    });
+}
+
+function choiceLang(){
+    openUIActionSelector([{name:'中文'},{name:'English'},{name:'한국어'}],0)
+}
+
+function selectCode(){
+    var UIListCard = api.require('UIListCard');
+    var Area_code = getAreaCode()
+    for(var i=0;i<Area_code.length;i++){
+        Area_code[i].name_zh = Area_code[i].name
+        if($api.getStorage('language')=='cn'){
+            Area_code[i].name = Area_code[i].name_zh
+        }else{
+            Area_code[i].name = Area_code[i].en
+        }
+        Area_code[i].customerTypes = Area_code[i].tel
+    }
+    UIListCard.open({
+        rect : {
+            x : 0,
+            y : 0,
+            w : api.winWidth,
+            h : api.winHeight
+        },
+        backgroudColor:'rgba(255,255,255,1)', // (可选项) 模块的背景颜色，默认：'rgba(0,0,0,0)'
+        sectionTitle: {                 //（可选项）JSON对象；标题的样式
+            bgColor: '#eee',            //（可选项）字符串类型；标题的背景色，支持 rgb、rgba、#；默认：'#EEEEEE'
+            color: '#000',              //（可选项）字符串类型；标题文字颜色，支持 rgb、rgba、#；默认：'#000000'
+            size: 12,                   //（可选项）数字类型；标题文字大小；默认：12.0
+            height: 25                  //（可选项）数字类型；区域标题的高度，默认：25.0
+        },
+        item: {                         //（可选项）JSON对象；列表项的样式
+            bgColor: '#fff',            //（可选项）字符串类型；列表项的背景色，支持 rgb、rgba、#；默认：'#FFFFFF'
+            activeBgColor: '#696969',   //（可选项）字符串类型；列表项按下时的背景色，支持 rgb、rgba、#；默认：'#696969'
+            color: '#000',              //（可选项）字符串类型；列表项的文字颜色，支持 rgb、rgba、#，默认：'#000000'
+            size: 14,                   //（可选项）数字类型；列表项的文字大小，默认：14.0
+            height: 40,                  //（可选项）数字类型；列表项的高度，默认：40.0
+            customerColor:'#000',        // (可选项)字符串类型；条目类型的文字颜色
+            customerSize: 14,           //（可选项）数字类型；条目类型的文字的大小
+            customerWidth:10,            // (可选项) 数字类型；条目类型若为图片,则此参数有效,条目类型图片的宽度
+            customerHeight:10,           // (可选项) 数字类型；条目类型若为图片,则此参数有效,条目类型图片的高度
+        },
+        contacts : Area_code,
+        // fixedOn : api.frameName
+    }, function(ret) {
+        if (ret) {
+            if(ret.eventType=='click'){
+                document.getElementById('AreaCode').value = '+'+ret.contact.tel
+                // document.getElementById('AreaCode').value = ret.contact.tel
+                UIListCard.close();
+            }
+        }
+    });
+}
+
+function openUIActionSelector(data,index){
+
+UIActionSelector.open({
+    datas:data,
+    bgCorner:15,
+    lineColor:'#fff',
+    selectorDividerColor:'#EFEEFA',
+    layout: {
+        row: 3,
+        col: 1,
+        height: 35,
+        size: 14,
+        sizeActive: 18,
+        rowSpacing: 5,
+        colSpacing: 10,
+        maskBg: 'rgba(0,0,0,0.3)',
+        leftMargin: 30,
+        rightMargin: 30,  
+        bg: '#fff',
+        color: '#E25760',
+        colorActive: '#E25760',
+        colorSelected: '#E25760'
+    },
+    animation: true,
+    cancel: {
+        // text: getTranslate('取消'),
+        text: "NO",
+        size: 16,
+        w: 90,
+        h: 35,
+        bg: '#fff',
+        bgActive: '#ccc',
+        color: '#888',
+        colorActive: '#fff'
+    },
+    ok: {
+        // text: getTranslate('确定'),
+        text: "OK",
+        size: 16,
+        w: 90,
+        h: 35,
+        bg: '#fff',
+        bgActive: '#ccc',
+        color: '#888',
+        colorActive: '#fff'
+    },
+    title: {
+        text: '',
+        size: 12,
+        h: 30,
+        bg: '#fff',
+        color: '#888'
+    },
+    fixedOn: api.frameName,
+    actives:[index]
+}, function(ret, err) {
+    if (ret) {
+        console.log(JSON.stringify(ret));
+        if(ret.eventType=='ok'){
+            var level1 = ret.level1
+            // '中文','English','한국어'
+            if(level1=='中文'){
+                $api.setStorage('language','cn')
+            }
+            if(level1=='English'){
+                $api.setStorage('language','en')
+            }
+            if(level1=='한국어'){
+                $api.setStorage('language','ko')
+            }
+            api.rebootApp();
+        }
+        // if(ret.level1){
+        //     api.sendEvent({
+        //         name: 'choice',
+        //         extra: {
+        //             data:ret.level1,
+        //             type:type
+        //         }
+        //     });
+        // }
+    } else {
+        // alert(JSON.stringify(err));
+    }
+});
+}
+</script>
+
+</html>

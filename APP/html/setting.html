@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+        content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>setting</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <style>
+        html,
+        body {
+            height: 100%;
+            background-color: #F4F4F4;
+        }
+
+        .header {
+            width: 100vw;
+            height: 90px;
+            background: url('../image/createLink/header.png') no-repeat;
+            background-size: 100% 100%;
+            position: relative;
+        }
+
+        #title {
+            position: absolute;
+            text-align: center;
+            width: 100%;
+            margin-top: 4vw;
+            color: #fff;
+        }
+
+        #back {
+            position: absolute;
+            height: 5vw;
+            left: 5vw;
+            margin-top: 4vw;
+        }
+
+        .btnList {
+            background-color: #fff;
+            margin-bottom: 9px;
+        }
+
+        .btn {
+            height: 60px;
+            width: 85%;
+            font-size: 14px;
+            color: #707070;
+            line-height: 60px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btnList>hr {
+            margin: 0 auto;
+            width: 85%;
+            height: 1px;
+            background-color: #EFEEFA;
+        }
+
+        .btn>div {
+            margin-left: 15px;
+        }
+
+        .outLogin {
+            height: 50px;
+            line-height: 50px;
+            font-size: 15px;
+            color: #E25760;
+            width: 100%;
+            text-align: center;
+            background-color: #fff;
+        }
+
+        .open {
+            background-color: #f8abb1;
+            width: 60px;
+            height: 30px;
+            border-radius: 15px;
+        }
+
+        .open>div {
+            background-color: #fff;
+            width: 26px;
+            height: 26px;
+            margin: 2px;
+            margin-left: 32px;
+            border-radius: 13px;
+        }
+
+        .close {
+            background-color: rgb(177, 177, 177);
+            width: 60px;
+            height: 30px;
+            border-radius: 15px;
+        }
+
+        .close>div {
+            background-color: #fff;
+            width: 26px;
+            height: 26px;
+            margin: 2px;
+            border-radius: 13px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <div id="title" i18n="setting.setting">个人设置</div>
+        <img id="back" src="../image/back.png" onclick="closeWin()" alt="">
+    </div>
+
+    <div class="btnList" onclick="openWin('babyInfo')">
+        <div class="btn">
+            <div i18n="setting.babyInfo">宝宝信息</div>
+            <img src="../image/setting/right.png" height="30%" alt="" srcset="">
+        </div>
+    </div>
+
+    <div class="btnList">
+        <div class="btn" onclick="openWin('help')">
+            <div i18n="setting.help">冲奶机使用帮助</div>
+            <img src="../image/setting/right.png" height="30%" alt="" srcset="">
+        </div>
+        <hr>
+        <div class="btn" onclick="openWin('milkSetting')">
+            <div i18n="setting.inputMilk">输入奶粉</div>
+            <img src="../image/setting/right.png" height="30%" alt="" srcset="">
+        </div>
+        <hr>
+        <div class="btn" onclick="openWin('milkSelect')">
+            <div i18n="setting.milkSet">奶粉设置</div>
+            <img src="../image/setting/right.png" height="30%" alt="" srcset="">
+        </div>
+        <hr>
+        <div class="btn" onclick="openWin('Explanation')">
+            <div i18n="setting.menu">说明</div>
+            <img src="../image/setting/right.png" height="30%" alt="" srcset="">
+        </div>
+    </div>
+
+    <div class="btnList">
+        <div class="btn" onclick="unband()">
+            <div i18n="setting.unband">设备解绑</div>
+            <img src="../image/setting/right.png" height="30%" alt="" srcset="">
+        </div>
+        <hr>
+        <div class="btn" onclick="clearAccount()">
+            <div i18n="setting.clear">账号注销</div>
+            <!-- <img src="../image/setting/right.png" height="30%" alt="" srcset=""> -->
+            <div></div>
+        </div>
+        <hr>
+
+        <!-- <div class="btn" onclick="change()">
+            <div i18n="setting.season">冬季模式</div>
+            <div class="close" id="season">
+                <div></div>
+            </div>
+        </div> -->
+        <!-- <div class="btnList" onclick="openWin('video')">
+            <div class="btn">
+                <div i18n="setting.video">安装视频</div>
+                <img src="../image/setting/right.png" height="30%" alt="" srcset="">
+            </div>
+        </div> -->
+        <hr>
+        <div class="btn" onclick="choiceLang()">
+            <div i18n="setting.lang">语言</div>
+            <div style="color: #E25760;font-size: 15px;margin-right: 5px;" id="showLang">中文</div>
+        </div>
+    </div>
+
+    <div class="outLogin" onclick="checkout()" i18n="setting.outLogin">
+        退出账号
+    </div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script src="../script/lang.js"></script>
+<script src="../script/jquery.min.js"></script>
+<script src="../script/jquery.i18n.min.js"></script>
+<script>
+    var UIActionSelector = null
+    apiready = function () {
+        UIActionSelector = api.require('UIActionSelector');
+        var title = document.getElementById('title')
+        $api.fixStatusBar(title)
+        var back = document.getElementById('back')
+        $api.fixStatusBar(back)
+        // setSeason()
+        api.addEventListener({
+            name: 'choice'
+        }, function (ret, err) {
+            if (ret.value.type == 'setLang') {
+                // '中文','English','한국어'
+                if (ret.value.data == '中文') {
+                    $api.setStorage('language', 'cn')
+                }
+                if (ret.value.data == 'English') {
+                    $api.setStorage('language', 'en')
+                }
+                if (ret.value.data == '한국어') {
+                    $api.setStorage('language', 'ko')
+                }
+                api.rebootApp();
+            }
+        });
+        initLang()
+        ChangeLang($api.getStorage('language'))
+    };
+
+    function closeWin() {
+        api.closeWin();
+    }
+
+    function openWin(name) {
+        api.openWin({
+            name: name,
+            url: './' + name + '.html',
+            bounces: false
+        });
+    }
+    // 设置显示当前语言名称
+    function initLang() {
+        //showLang
+        var lang = $api.getStorage('language')
+        var showLang = document.getElementById('showLang')
+        switch (lang) {
+            case 'cn':
+                // showLang
+                showLang.innerHTML = "中文";
+                break;
+            case 'en':
+                // showLang
+                showLang.innerHTML = "English";
+                break;
+            case 'ko':
+                // showLang
+                showLang.innerHTML = "한국어";
+                break;
+            default:
+                showLang.innerHTML = "中文";
+
+        }
+    }
+
+    function setSeason() {
+        var seasonMode = $api.getStorage('seasonMode')
+        var season = $api.byId('season')
+        if (seasonMode == 'true') {
+            seasonMode = true
+        } else if (seasonMode == 'false') {
+            seasonMode = false
+        }
+        $api.removeCls(season, 'open');
+        $api.removeCls(season, 'close');
+        if (seasonMode) {
+            $api.addCls(season, 'open');
+        } else {
+            $api.addCls(season, 'close');
+        }
+    }
+
+
+    function change() {
+        api.execScript({
+            name: 'Group',
+            frameName: 'main',
+            script: 'changeSeason()'
+        });
+    }
+    var oldTime = null
+
+    function unband() {
+        var time = new Date().getTime()
+        if (!oldTime || time - oldTime > 2000) {
+            api.toast({
+                msg: getTranslate('再次按下解除设备绑定'),
+                duration: 2000,
+                location: 'bottom'
+            });
+            oldTime = time
+        } else {
+            var obj = {
+                "uid": $api.getStorage('uid'),
+                "token": $api.getStorage('token'),
+                "did": $api.getStorage('device').did
+            }
+            api.execScript({
+                name: 'choiceDevice',
+                script: 'unband(' + JSON.stringify(obj) + ')'
+            });
+        }
+
+    }
+
+    function clearAccount() {
+        api.confirm({
+            title: '提示',
+            msg: '确认注销账号吗？一旦确认无法更改。',
+            buttons: ['确定', '取消']
+        }, function (ret, err) {
+            if (ret.buttonIndex == 1) {
+                var BrewData = $api.getStorage('BrewData')
+                $api.clearStorage();
+                $api.setStorage('BrewData', BrewData);
+                api.rebootApp();
+            }
+        });
+    }
+
+    function choiceLang() {
+        openUIActionSelector([{
+            name: '中文'
+        }, {
+            name: 'English'
+        }, {
+            name: '한국어'
+        }], 0)
+        // openChoice({
+        //     data: ['中文','English','한국어'
+        //     ],
+        //     type: 'setLang',
+        //     default:0
+        // })
+    }
+
+    function openChoice(data) {
+        api.openFrame({
+            name: 'choice',
+            url: './choice.html',
+            bounces: false,
+            rect: {
+                x: 0,
+                y: 0,
+                w: 'auto',
+                h: 'auto'
+            },
+            pageParam: data
+        });
+    }
+    var oldExitTime = null
+
+    function checkout() {
+        var time = new Date().getTime()
+        if (!oldExitTime || time - oldExitTime > 2000) {
+            api.toast({
+                msg: getTranslate('再次按下退出登录'),
+                duration: 2000,
+                location: 'bottom'
+            });
+            oldExitTime = time
+        } else {
+            var BrewData = $api.getStorage('BrewData')
+            $api.clearStorage();
+            $api.setStorage('BrewData', BrewData);
+            api.rebootApp();
+        }
+        // $api.clearStorage();
+        // api.rebootApp();
+    }
+
+    function openUIActionSelector(data, index) {
+        UIActionSelector.open({
+            datas: data,
+            bgCorner: 15,
+            lineColor: '#fff',
+            selectorDividerColor: '#EFEEFA',
+            layout: {
+                row: 3,
+                col: 1,
+                height: 35,
+                size: 14,
+                sizeActive: 18,
+                rowSpacing: 5,
+                colSpacing: 10,
+                maskBg: 'rgba(0,0,0,0.3)',
+                leftMargin: 30,
+                rightMargin: 30,
+                bg: '#fff',
+                color: '#E25760',
+                colorActive: '#E25760',
+                colorSelected: '#E25760'
+            },
+            animation: true,
+            cancel: {
+                // text: getTranslate('取消'),
+                text: "NO",
+                size: 16,
+                w: 90,
+                h: 35,
+                bg: '#fff',
+                bgActive: '#ccc',
+                color: '#888',
+                colorActive: '#fff'
+            },
+            ok: {
+                // text: getTranslate('确定'),
+                text: "OK",
+                size: 16,
+                w: 90,
+                h: 35,
+                bg: '#fff',
+                bgActive: '#ccc',
+                color: '#888',
+                colorActive: '#fff'
+            },
+            title: {
+                text: '',
+                size: 12,
+                h: 30,
+                bg: '#fff',
+                color: '#888'
+            },
+            fixedOn: api.frameName,
+            actives: [index]
+        }, function (ret, err) {
+            if (ret) {
+                console.log(JSON.stringify(ret));
+                if (ret.eventType == 'ok') {
+                    var level1 = ret.level1
+                    // '中文','English','한국어'
+                    if (level1 == '中文') {
+                        $api.setStorage('language', 'cn')
+                    }
+                    if (level1 == 'English') {
+                        $api.setStorage('language', 'en')
+                    }
+                    if (level1 == '한국어') {
+                        $api.setStorage('language', 'ko')
+                    }
+                    api.rebootApp();
+                }
+                // if(ret.level1){
+                //     api.sendEvent({
+                //         name: 'choice',
+                //         extra: {
+                //             data:ret.level1,
+                //             type:type
+                //         }
+                //     });
+                // }
+            } else {
+                // alert(JSON.stringify(err));
+            }
+        });
+    }
+</script>
+
+</html>

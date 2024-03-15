@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>createLink</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <style>
+        html,
+        body {
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+        .Main{
+            height: 40vh;
+            width: 100vw;
+            background-color: #fff;
+            position: absolute;
+            bottom: 0;
+            left: 0px;
+            border-radius: 20px 20px 0px 0px;
+        }
+        .data{
+            width: 80%;
+            height: 100px;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            overflow: hidden;
+            transform: translate(-50%,-50%);
+        }
+        .show{
+            width: 100%;
+            height: 50px;
+            border-top: 1px solid #EFEEFA;
+            border-bottom: 1px solid #EFEEFA;
+        }
+        .show>ul{
+            line-height: 50px;
+            position: absolute;
+            left: 50%;
+            top: 0px;
+            transition: all 0.30s ease;
+            transform: translate(-50%,0);
+            color: #E25760;
+        }
+        .show>ul>li{
+            text-align: center;
+        }
+        .btn{
+            display: flex;
+            justify-content: space-between;
+            margin: 5vw 10vw;
+            color: #cecece;
+        }
+        .btn>div{
+            width: 20vw;
+            height: 30px;
+            line-height: 30px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body onclick="closeFrame()" id="all">
+    <div class="Main" id="Main" onclick="stopPropagation(event)">
+        <div class="data">
+            <div class="show">
+                <ul id="item"></ul>
+            </div>
+            <div class="showMark"></div>
+        </div>
+        <div class="btn">
+            <div onclick="cancel()" i18n="login.cancel">取消</div>
+            <div onclick="confirm()" i18n="login.confirm">确定</div>            
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script src="../script/jquery.min.js"></script>
+<script src="../script/jquery.i18n.min.js"></script>
+<script src="../script/lang.js"></script>
+<script>
+    var item
+    var lastPageY = null
+    var data = []
+    apiready = function() {
+        item = document.getElementById('item')
+        data = api.pageParam.data
+        for(var i = 0;i<data.length;i++){
+            item.innerHTML += '<li>'+data[i]+'</li>'
+        }
+        item.style.top = -api.pageParam.default*50 +'px'  
+        var control = document.getElementById('Main')
+        control.ontouchmove = function(event){
+            // 在弹出警告时 拒绝控制奶量
+            if(lastPageY){
+                // 判断当前手指x轴位置与之前记录的手机x轴位置之间的差值是否大于20   即设置手指控制奶量的灵敏度
+                if(lastPageY>event.touches[0].pageY+50){
+                    if(parseInt($api.cssVal(item,'top'))>-(data.length-1)*50){
+                        item.style.top = parseInt($api.cssVal(item,'top')) -50 +'px'  
+                    }
+                    lastPageY = event.touches[0].pageY
+                }
+
+                if(lastPageY-event.touches[0].pageY<-50){
+                    if(parseInt($api.cssVal(item,'top'))<0){
+                        item.style.top = parseInt($api.cssVal(item,'top')) +50 +'px'
+                    }
+                    lastPageY = event.touches[0].pageY
+                }
+            }else{
+                lastPageY = event.touches[0].pageY
+            }
+        }
+        document.getElementById('all').ontouchend = function(){
+            lastPageY = null
+            item.style.top = parseInt($api.cssVal(item,'top')) - parseInt($api.cssVal(item,'top'))%50 +'px'
+        }
+        ChangeLang($api.getStorage('language'))                
+    };
+
+    function closeFrame(){
+        api.closeFrame();
+    }
+    // 阻止事件传递
+    function stopPropagation(event){
+        event.stopPropagation()
+        // item.style.top = parseInt($api.cssVal(item,'top')) -50 +'px'
+    }
+
+    function cancel(){
+        closeFrame()
+    }
+    function confirm(){
+        api.sendEvent({
+            name: 'choice',
+            extra: {
+                data: data[Math.abs(parseInt(parseInt($api.cssVal(item,'top'))/50))],
+                type: api.pageParam.type
+            }
+        });
+        closeFrame()        
+    }
+</script>
+</html>

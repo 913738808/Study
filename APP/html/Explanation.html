@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+        content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>help</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <style>
+        html,
+        body {
+            height: 100%;
+        }
+
+        .header {
+            width: 100vw;
+            height: 90px;
+            background: url('../image/createLink/header.png') no-repeat;
+            background-size: 100% 100%;
+            position: relative;
+        }
+
+        #title {
+            position: absolute;
+            text-align: center;
+            width: 100%;
+            margin-top: 4vw;
+            color: #fff;
+        }
+
+        #back {
+            position: absolute;
+            height: 5vw;
+            left: 5vw;
+            margin-top: 4vw;
+        }
+        .help {
+            width: 100vw;
+            overflow: hidden;
+            height: calc((92vh - 210px)/2 - 30px);
+        }
+
+        .help>img {
+            margin: 0 auto;
+            display: block;
+        }
+
+     
+
+
+        .icon {
+            color: #fff;
+            position: relative;
+            display: block;
+            width: 24px;
+        }
+
+        .icon>img {
+            display: block;
+        }
+
+        .icon>p {
+            display: block;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            color: #fff;
+            font-size: 12px;
+        }
+        .Explanation{
+            margin: 30px auto;
+            width: 90%;
+            font-size: 1.2rem;
+            overflow: hidden;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <div id="title" i18n="help.Explanation">说明</div>
+        <img id="back" onclick="closeWin()" src="../image/back.png" alt="">
+    </div>
+    <!-- E03:泡奶出水温度不在40-45度之间 -->
+    <!-- 等待奶瓶拿走，自动出水排空恒温仓的水 -->
+    <!-- E05:其他原因导致泡奶失败 -->
+    <!-- 按排空键 -->
+<pre class="Explanation" style="display: block;">
+错误说明
+E01:冷却仓温度过高；
+    解决方法:按排空键。
+E02:流速不正常；
+    解决方法:按排空键。
+E04:粉仓计数不正常；
+    解决方法:按任意键清除。
+E05:奶瓶、粉桶、混合仓、水箱异常；
+    解决方法:放置到位或加满粉、加满水。
+E06:机器运行过程中断电；
+    解决方法:按排空键。
+</pre>
+<!-- E03: The temperature of foamed 
+milk is not between 40-45 degrees
+     Wait for the bottle to be 
+removed -->
+<!-- E05: Other reasons cause foaming 
+failure
+     Press the empty button -->
+<pre class="Explanation" style="display: none;">
+Error description
+E01: The cooling chamber temperature is too high; 
+    Solution: Press the empty key. 
+E02: The flow rate is abnormal. 
+    Solution: Press the empty key. 
+E04: Powder bin count is not normal; 
+    Solution: Press any key to clear. 
+E05: Abnormal feeding bottle, powder barrel, mixing bin and water tank; 
+    Solution: Place in place or fill with powder and water. 
+E06: electrical interruption during machine operation; 
+    Solution: Press the empty key.
+</pre>
+<!-- E03 : 발포 우유의 온도가 40-45도 
+사이가 아님
+     병이 제거 될 때까지 기다리십시오 -->
+<!-- E05 : 다른 원인으로 인해 발포 실패
+     빈 버튼을 누르십시오 -->
+<pre class="Explanation" style="display: none;">
+오류 설명
+E01:냉방실의 온도가 너무 높습니다.
+    해결 방법:비우기 키를 누릅니다.
+E02:유속이 정상이 아닙니다.
+    해결 방법:비우기 키를 누릅니다.
+E04:분말 창고 계수 비정상;
+    해결책:임의로 키를 눌러 지운다.
+E05:우유병, 분말통, 혼합창고, 물탱크 이상.
+    해결 방법:제대로 놓거나 가득 분말, 가득 물을 넣어.
+E06:기계의 운행과정에서 전기가 중단된다.
+    해결 방법:비우기 키를 누릅니다.
+</pre>
+ 
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script src="../script/lang.js"></script>
+<script src="../script/jquery.min.js"></script>
+<script src="../script/jquery.i18n.min.js"></script>
+<script>
+    apiready = function () {
+        var title = document.getElementById('title')
+        $api.fixStatusBar(title)
+        var back = document.getElementById('back')
+        $api.fixStatusBar(back)
+        var elList = document.getElementsByClassName('Explanation')
+        if($api.getStorage('language')=='en'){
+            elList[1].style.display = 'block'
+            elList[0].style.display = 'none'
+            elList[2].style.display = 'none'
+            
+        }
+        if($api.getStorage('language')=='ko'){
+            elList[2].style.display = 'block'
+            elList[0].style.display = 'none'
+            elList[1].style.display = 'none'
+            
+        }
+        ChangeLang($api.getStorage('language'))                        
+    };
+
+    function closeWin(){
+        api.closeWin();
+    }
+</script>
+
+</html>
