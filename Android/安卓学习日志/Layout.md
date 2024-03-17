@@ -2,6 +2,6 @@
 
 ## LinearLayout
 
-## LinearLayout
+## CollapsingToolbarLayout
 
 ## LinearLayout
