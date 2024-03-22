@@ -24,8 +24,10 @@ public class Recursion {
         // boolean res = recursion.isPowerOfThree(9);
         // System.out.println("3的幂次" + res);
 
-        boolean res = recursion.isPowerOfTwo(8);
-        System.out.println("2的幂次" + res);
+        // boolean res = recursion.isPowerOfTwo(8);
+        // System.out.println("2的幂次" + res);
+
+        
     }
 
     public void test(int n){
@@ -92,7 +94,7 @@ public class Recursion {
     public boolean isPowerOfThree(int n){
         /**
          * n = 0时 false
-         * 1 / 3 = 0 。。。 1
+         * 1 / 3 = 0 。。。1
          * 2 / 3 = 0 。。。2
          * 3 / 3 = 1 。。。0
          * 4 / 3 = 1 。。。1
