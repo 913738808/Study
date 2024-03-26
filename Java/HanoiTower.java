@@ -25,12 +25,7 @@ public class HanoiTower {
          * 4
          * 5
          */
-        // if (A.size() + B.size() + C.size() == 1) {
-        // C.add(A.get(0));
-        // A.remove(0);
-        // } else {
-        // // 汉诺塔个数大于两个时
-        // }
+
         AToC(A.size(), A, B, C);
 
         System.out.println("\n--------A--------\n");
